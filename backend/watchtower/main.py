@@ -2,19 +2,48 @@ import schedule
 import time
 import sources
 import storage
+import sys
+import os
+
+# Add the backend directory to sys.path so we can import from editor
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
+from editor import clustering, scoring, assigner
+from journalist import dossier
+from writer import publisher
 
 def job():
     print(f"\n[{time.strftime('%H:%M:%S')}] Watchtower Job Started")
     # 1. Fetch
     articles = sources.fetch_all_news()
     
-    # 2. Filter / Deduplicate (Placeholder for now)
-    # unique_articles = filter_data(articles)
-    
-    # 3. Save
+    # 2. Filter / Deduplicate (Clustering)
     if articles:
+        clusters = clustering.deduplicate_news(articles)
+        
+        # 3. Score & Assign
+        scored_clusters = []
+        print(f"[{time.strftime('%H:%M:%S')}] Editor: Scoring {len(clusters)} clusters (Throttled to Top 3)...")
+        # Throttle: Only process top 3 clusters to prevent rate limit spikes
+        for cluster in clusters[:3]:
+            # Score the first article as representative
+            score_data = scoring.score_article(cluster[0])
+            scored_clusters.append((cluster, score_data))
+            
+        # 4. Create Assignments
+        assigner.create_assignments(scored_clusters)
+        
+        # 5. Run Journalist (Research)
+        print(f"[{time.strftime('%H:%M:%S')}] Journalist: Starting research on pending tickets...")
+        dossier.process_assignments()
+        
+        # 6. Run Writer (Publish)
+        print(f"[{time.strftime('%H:%M:%S')}] Writer: Publishing pending dossiers...")
+        publisher.publish_pending_dossiers()
+        
+        # 7. Save Raw Data (Optional, but good for debugging)
         storage.save_news(articles)
-        print(f"[{time.strftime('%H:%M:%S')}] Job Completed. {len(articles)} articles currently available.")
+        print(f"[{time.strftime('%H:%M:%S')}] Job Completed.")
     else:
         print("No articles found.")
 

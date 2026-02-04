@@ -1,0 +1,47 @@
+{
+  "ticket_id": "1770240102_11",
+  "title": "Nvidia's $100 billion OpenAI deal has seemingly vanished",
+  "status": "researched",
+  "search_results": [
+    {
+      "url": "https://arstechnica.com/information-technology/2026/02/five-months-later-nvidias-100-billion-openai-investment-plan-has-fizzled-out/",
+      "title": "Nvidia's $100 billion OpenAI deal has seemingly vanished",
+      "content": "Tech critic Ed Zitron has been critical of Nvidia\u2019s circular investments for some time, which touch dozens of tech companies, including major players and startups. They are also all Nvidia customers.\n\n\u201cNVIDIA seeds companies and gives them the guaranteed contracts necessary to raise debt to buy GPUs from NVIDIA,\u201d Zitron wrote on Bluesky last September, \u201ceven though these companies are horribly unprofitable and will eventually die from a lack of any real demand.\u201d\n\n## Chips from other places [...] Ars Technica has been separating the signal from\nthe noise for over 25 years. With our unique combination of\ntechnical savvy and wide-ranging interest in the technological arts\nand sciences, Ars is the trusted source in a sea of information. After\nall, you don\u2019t need to know everything, only what\u2019s important. [...] Reuters also wrote that OpenAI is unsatisfied with the speed of some Nvidia chips for inference tasks, citing eight sources familiar with the matter. Inference is the process by which a trained AI model generates responses to user queries. According to the report, the issue became apparent in OpenAI\u2019s Codex, an AI code-generation tool. OpenAI staff reportedly attributed some of Codex\u2019s performance limitations to Nvidia\u2019s GPU-based hardware.\n\nAfter the Reuters story published and Nvidia\u2019s stock price took a dive, Nvidia and OpenAI have tried to smooth things over publicly. OpenAI CEO Sam Altman posted on X: \u201cWe love working with NVIDIA and they make the best AI chips in the world. We hope to be a gigantic customer for a very long time. I don\u2019t get where all this insanity is coming from.\u201d",
+      "score": 0.9998795,
+      "raw_content": null
+    },
+    {
+      "url": "https://www.youtube.com/watch?v=w1g2aETvSUQ",
+      "title": "Nvidia Kills $100 Billion OpenAI Deal... \"It Was Never a Commitment\"",
+      "content": "... news/oracle-may-slash-30-000-114418881.html https ... New DeepSeek Research - The Future Is Here! Two Minute Papers.",
+      "score": 0.99938333,
+      "raw_content": null
+    },
+    {
+      "url": "https://www.wsj.com/tech/ai/the-100-billion-megadeal-between-openai-and-nvidia-is-on-ice-aa3025e3?gaa_at=eafs&gaa_n=AWEtsqc2IFEnkR6Hsz8uzj3db40rsEs6onEayLmxpVsQfohP_754IiWFvG3U&gaa_ts=6983cd44&gaa_sig=NSz7NcQ0IqnDQp9u1xdlV3hBCCxArvn1rW2NTJnVQ0FiaqlSFbmCrVQFApGtH4ksrqV_L0A22MkLJ0AqrTOmpg%3D%3D",
+      "title": "The $100 Billion Megadeal Between OpenAI and Nvidia Is on Ice",
+      "content": "While the September deal is stalled, Nvidia is pushing ahead with a separate large investment in OpenAI as part of the AI developer's efforts to",
+      "score": 0.99837697,
+      "raw_content": null
+    },
+    {
+      "url": "https://www.cnbc.com/2026/02/02/nvidia-stock-price-openai-funding.html",
+      "title": "Nvidia shares down after report that its OpenAI investment stalled",
+      "content": "However, Nvidia's CEO, Jensen Huang, had said to industry associates late last year that the $100 billion investment was nonbinding and not finalized. The longtime chief also criticized a lack of discipline in OpenAI's business strategy and shared concerns about competition from firms like Alphabet's Google and Anthropic, according to the Journal's report.\n\nhide content\n\nOver the weekend, Huang denied any claims he was unhappy with OpenAI, calling it \"nonsense,\" but reiterated that the investment won't be more than $100 billion.\n\n\"We are going to make a huge investment in OpenAI. I believe in OpenAI, the work that they do is incredible, they are one of the most consequential companies of our time, and I really love working with Sam,\" he said regarding OpenAI's CEO, Sam Altman. [...] CNBC\nJoin IC\nJoin Pro\nJoin IC\nJoin Pro\n\n# Nvidia shares are down after a report that its OpenAI investment stalled. Here's what's happening\n\nthumbnail\n\nIn this article\n\nNvidia's stock fell in early trading Monday after reports emerged that the chipmaker's plans to invest $100 billion into OpenAI were stalled.\n\nThe semiconductor giant's shares were down 1.1% as of 11:18 a.m. ET. Company insiders said there was uncertainty about a deal between Nvidia and OpenAI, according to a Wall Street Journal report on Friday, citing people familiar with the matter.\n\nNvidia announced an agreement with OpenAI in September to build at least 10 gigawatts of computing power for OpenAI, as well as an investment of up to $100 billion. [...] \"Sam is closing the round (of investment), and we will absolutely be involved,\" Huang added in comments reported by Bloomberg. \"We will invest \u200da great deal of money, probably the largest investment we've ever made.\"\n\n## Why the stock dropped\n\nSarah Kunst, managing director at Cleo Capital, told CNBC's \"Worldwide Exchange\" on Monday that a cause for concern was uncertainty over the exact amount that would be invested in OpenAI.\n\n\"One of the things I did notice about Jensen Huang is that there wasn't a strong 'It will be $100 billion.' It was, 'It will be big. It will be our biggest investment ever.' And so I do think there are some question marks there ... that kind of back and forth isn't normal between an investor and a startup to play out in the media,\" Kunst added.",
+      "score": 0.9950177,
+      "raw_content": null
+    },
+    {
+      "url": "https://www.reuters.com/business/openai-is-unsatisfied-with-some-nvidia-chips-looking-alternatives-sources-say-2026-02-02/",
+      "title": "OpenAI is unsatisfied with some Nvidia chips and looking ... - Reuters",
+      "content": "Seven sources said that OpenAI is not satisfied with the speed at which Nvidia's hardware can spit out answers to ChatGPT users for specific",
+      "score": 0.30569732,
+      "raw_content": null
+    }
+  ],
+  "key_facts": [
+    "Source: https://arstechnica.com/information-technology/2026/02/five-months-later-nvidias-100-billion-openai-investment-plan-has-fizzled-out/\nSummary: Nvidia's $100 billion OpenAI deal has seemingly vanished - Ars Technica\nSkip to content\nText\nsettings\nStory text\nSize\nSmall\nStandard\nLarge\nWidth\n*\nStandard\nWide\nLinks\nStandard\nOrange\n* Subscribers only\nLearn more\nMinimize to nav\nIn September 2025, Nvidia and OpenAI\nannounced\na letter of intent for Nvidia to invest up to $100 billion in OpenAI\u2019s AI infrastructure. At the time, the companies said they expected to finalize details \u201cin the coming weeks.\u201d Five months later, no deal has closed, Nvidia...",
+    "Source: https://www.youtube.com/watch?v=w1g2aETvSUQ\nSummary: Nvidia Kills $100 Billion OpenAI Deal... \"It Was Never a Commitment\" - YouTube About Press Copyright Contact us Creators Advertise Developers Terms Privacy Policy & Safety How YouTube works Test new features NFL Sunday Ticket \u00a9 2026 Google LLC..."
+  ],
+  "generated_at": "2026-02-04 17:35:48"
+}
