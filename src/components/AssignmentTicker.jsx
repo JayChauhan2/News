@@ -4,7 +4,7 @@ const AssignmentTicker = () => {
     const [assignments, setAssignments] = useState([]);
 
     useEffect(() => {
-        fetch('http://localhost:8000/assignments')
+        fetch(`http://localhost:8000/assignments?t=${Date.now()}`)
             .then(res => res.json())
             .then(data => setAssignments(data))
             .catch(err => console.error("Failed to fetch assignments", err));

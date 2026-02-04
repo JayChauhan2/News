@@ -27,7 +27,15 @@ def scrape_url(url):
         chunks = (phrase.strip() for line in lines for phrase in line.split("  "))
         text = '\n'.join(chunk for chunk in chunks if chunk)
         
-        return text[:10000] # Limit to 10k chars to avoid easy overwhelm
+        image_url = ""
+        og_image = soup.find("meta", property="og:image")
+        if og_image:
+            image_url = og_image.get("content", "")
+            
+        return {
+            "text": text[:10000], # Limit to 10k chars
+            "image": image_url
+        }
         
     except Exception as e:
         print(f"Error scraping {url}: {e}")

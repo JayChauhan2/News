@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Layout from './components/Layout';
 import HomePage from './pages/HomePage';
 import WritersPage from './pages/WritersPage';
+import ArticlePage from './pages/ArticlePage';
 import './App.css';
 
 function App() {
@@ -10,7 +11,9 @@ function App() {
       <Routes>
         <Route path="/" element={<Layout />}>
           <Route index element={<HomePage />} />
+          <Route path="category/:category" element={<HomePage />} />
           <Route path="writers" element={<WritersPage />} />
+          <Route path="article/:id" element={<ArticlePage />} />
         </Route>
       </Routes>
     </BrowserRouter>

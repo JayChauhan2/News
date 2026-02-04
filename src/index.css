@@ -1,23 +1,30 @@
-@import "tailwindcss";
-
-@theme {
-  --font-serif: "Chronicle Display", "Times New Roman", Times, serif;
-  --font-sans: "Retina", "Helvetica Neue", Helvetica, Arial, sans-serif;
-}
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 :root {
+  --font-serif: "Escrow", "Georgia", "Times New Roman", serif;
+  --font-sans: "Retina", "Arial", "Helvetica", sans-serif;
+
+  --color-black: #000000;
+  --color-gray-dark: #333333;
+  --color-gray-med: #666666;
+  --color-gray-light: #e2e2e2;
+  --color-bg: #ffffff;
+  --color-accent: #0274b6;
+  /* WSJ-ish Blue links */
+  --color-border: #dfe1e5;
+
+  --spacing-unit: 8px;
+}
+
+body {
+  margin: 0;
+  padding: 0;
   font-family: var(--font-serif);
-  line-height: 1.5;
-  font-weight: 400;
-
-  color-scheme: light;
-  color: #000000;
-  background-color: #ffffff;
-
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
+  background-color: var(--color-bg);
+  color: var(--color-black);
   -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
 }
 
 h1,
@@ -26,13 +33,170 @@ h3,
 h4,
 h5,
 h6 {
-  font-family: var(--font-serif);
   font-weight: 700;
-  letter-spacing: -0.02em;
+  margin: 0 0 0.5em 0;
+  line-height: 1.1;
 }
 
-body {
-  margin: 0;
-  min-width: 320px;
-  min-height: 100vh;
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/* Utilities */
+.font-sans {
+  font-family: var(--font-sans);
+}
+
+.font-serif {
+  font-family: var(--font-serif);
+}
+
+.text-xs {
+  font-size: 0.75rem;
+}
+
+.text-sm {
+  font-size: 0.875rem;
+}
+
+.text-base {
+  font-size: 1rem;
+}
+
+.text-lg {
+  font-size: 1.125rem;
+}
+
+.text-xl {
+  font-size: 1.25rem;
+}
+
+.text-2xl {
+  font-size: 1.5rem;
+}
+
+.text-3xl {
+  font-size: 1.875rem;
+}
+
+.text-4xl {
+  font-size: 2.25rem;
+}
+
+.uppercase {
+  text-transform: uppercase;
+}
+
+.font-bold {
+  font-weight: 700;
+}
+
+.tracking-widest {
+  letter-spacing: 0.1em;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 16px;
+}
+
+.grid {
+  display: grid;
+}
+
+.flex {
+  display: flex;
+}
+
+.hidden {
+  display: none;
+}
+
+@media (min-width: 1024px) {
+  .lg\:block {
+    display: block;
+  }
+
+  .lg\:grid-cols-12 {
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+  }
+
+  .lg\:col-span-8 {
+    grid-column: span 8 / span 8;
+  }
+
+  .lg\:col-span-4 {
+    grid-column: span 4 / span 4;
+  }
+
+  .lg\:col-span-3 {
+    grid-column: span 3 / span 3;
+  }
+
+  .lg\:col-span-6 {
+    grid-column: span 6 / span 6;
+  }
+}
+
+.border-b {
+  border-bottom: 1px solid var(--color-border);
+}
+
+.border-t {
+  border-top: 1px solid var(--color-border);
+}
+
+.border-r {
+  border-right: 1px solid var(--color-border);
+}
+
+.border-l {
+  border-left: 1px solid var(--color-border);
+}
+
+.py-2 {
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+}
+
+.py-4 {
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+}
+
+.px-4 {
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+.mb-4 {
+  margin-bottom: 1rem;
+}
+
+.mt-4 {
+  margin-top: 1rem;
+}
+
+.gap-4 {
+  gap: 1rem;
+}
+
+.gap-8 {
+  gap: 2rem;
+}
+
+/* Custom Scrollbar for hidden nav overflow */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }

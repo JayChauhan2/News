@@ -61,25 +61,38 @@ def publish_pending_dossiers():
         final_article = {
             "id": ticket_id,
             "headline": final_draft['headline'],
+            "category": final_draft.get('category', 'Tech'), # Default to Tech
             "content": final_draft['content'],
             "image_prompt": final_draft['image_prompt'],
+            "image_url": dossier.get('images', [None])[0] if dossier.get('images') else None,
             "seo_tags": final_draft.get('seo_tags', []),
             "meta_description": final_draft.get('meta_description', ""),
             "published_at": time.strftime('%Y-%m-%d %H:%M:%S'),
             "author": "The Senior Reporter (AI)"
         }
         
-        articles.insert(0, final_article) # Add to top
-        existing_ids.add(ticket_id) # Update running set
-        print(f"Writer: Published '{final_article['headline']}' (Tags: {len(final_article['seo_tags'])})")
+        # Load most recent state of articles to avoid overwrites
+        current_articles = []
+        if os.path.exists(ARTICLES_FILE):
+            try:
+                with open(ARTICLES_FILE, 'r') as f:
+                    current_articles = json.load(f)
+            except json.JSONDecodeError:
+                pass
         
-        # Cleanup
+        current_articles.insert(0, final_article)
+        
         try:
+            with open(ARTICLES_FILE, 'w') as f:
+                json.dump(current_articles, f, indent=2)
+            print(f"Writer: Published '{final_article['headline']}' (Tags: {len(final_article['seo_tags'])})")
+            
+            # Cleanup only after successful save
             os.remove(dossier_path)
             print(f"Writer: Removed processed dossier {filename}")
-        except Exception as e:
-            print(f"Writer: Failed to remove dossier {filename}: {e}")
             
-    # Save all
-    with open(ARTICLES_FILE, 'w') as f:
-        json.dump(articles, f, indent=2)
+            existing_ids.add(ticket_id) 
+            
+        except Exception as e:
+            print(f"Writer: Failed to save article or remove dossier {filename}: {e}")
+

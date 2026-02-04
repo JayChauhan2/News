@@ -5,12 +5,12 @@ import storage
 import sys
 import os
 
-# Add the backend directory to sys.path so we can import from editor
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+# Add the project root to sys.path
+sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
 
-from editor import clustering, scoring, assigner
-from journalist import dossier
-from writer import publisher
+from backend.editor import clustering, scoring, assigner
+from backend.journalist import dossier
+from backend.writer import publisher
 
 def job():
     print(f"\n[{time.strftime('%H:%M:%S')}] Watchtower Job Started")

@@ -1,5 +1,5 @@
 from . import prompts
-from llm_client import generate_json
+from backend.llm_client import generate_json
 import datetime
 import json
 
@@ -30,6 +30,7 @@ def write_article(dossier, style="WITTY"):
     Output ONLY a JSON object with the following structure:
     {{
         "headline": "A catchy, click-worthy headline",
+        "category": "Select ONE from: World, Business, U.S., Politics, Economy, Tech, Markets & Finance, Opinion, Free Expression, Arts, Lifestyle, Real Estate, Personal Finance, Health, Style, Sports",
         "content": "The full markdown article content...",
         "image_prompt": "A description for an AI image generator to create a hero image"
     }}

@@ -1,68 +1,46 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
+import { getTimeAgo } from '../utils';
 
 const ArticleCard = ({ article }) => {
     return (
-        <div style={{
-            border: '1px solid #333',
-            borderRadius: '8px',
-            padding: '20px',
-            marginBottom: '20px',
-            backgroundColor: '#1E1E1E',
-            color: '#E0E0E0'
-        }}>
-            <h2 style={{ marginTop: 0, color: '#4CAF50' }}>{article.headline}</h2>
-            <div style={{ fontSize: '0.8em', color: '#888', marginBottom: '10px' }}>
-                {article.published_at} | By {article.author}
+        <div className="py-8 first:pt-0 group">
+            {/* Metadata */}
+            <div className="flex items-center gap-2 mb-2 font-sans text-xs uppercase tracking-wider text-gray-500">
+                <span className="font-bold text-black">{article.category || "General"}</span>
+                <span className="text-gray-300">|</span>
+                <span>{getTimeAgo(article.published_at)}</span>
             </div>
 
-            {/* Simulation of where the Hero Image would go */}
-            <div style={{
-                backgroundColor: '#000',
-                height: '200px',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                border: '1px dashed #555',
-                marginBottom: '15px',
-                color: '#555',
-                fontSize: '0.9em',
-                fontStyle: 'italic',
-                padding: '20px',
-                textAlign: 'center'
-            }}>
-                [Hero Image Prompt: {article.image_prompt}]
+            {/* Headline Link */}
+            <Link to={`/article/${article.id}`} className="block">
+                <h3 className="font-serif text-3xl font-bold text-black leading-tight mb-3 group-hover:text-gray-600 transition-colors cursor-pointer">
+                    {article.headline}
+                </h3>
+            </Link>
+
+            {/* Content Preview */}
+            <div className="font-serif text-gray-800 text-lg leading-relaxed line-clamp-3 mb-4">
+                {/* 
+                   We render a plain text preview to avoid partial markdown issues in the card.
+                   Or we can just use the meta_description. 
+                 */}
+                {article.meta_description || "Click to read the full story on the autonomous press..."}
             </div>
 
-            <p style={{ lineHeight: '1.6' }}>{article.meta_description}</p>
-
-            <div style={{ marginTop: '15px' }}>
-                {article.seo_tags && article.seo_tags.map(tag => (
-                    <span key={tag} style={{
-                        display: 'inline-block',
-                        backgroundColor: '#333',
-                        color: '#888',
-                        padding: '2px 8px',
-                        borderRadius: '4px',
-                        fontSize: '0.8em',
-                        marginRight: '8px'
-                    }}>
-                        {tag}
-                    </span>
-                ))}
-            </div>
-
-            <details style={{ marginTop: '15px', cursor: 'pointer', color: '#64B5F6' }}>
-                <summary>Read Full Article</summary>
-                <div style={{
-                    marginTop: '10px',
-                    color: '#CCC',
-                    whiteSpace: 'pre-wrap',
-                    textAlign: 'left',
-                    fontFamily: 'monospace'
-                }}>
-                    {article.content}
+            {/* Footer / Read More */}
+            <div className="flex items-center justify-between">
+                <div className="text-xs font-sans font-bold text-gray-600 uppercase">
+                    By {article.author}
                 </div>
-            </details>
+
+                <Link
+                    to={`/article/${article.id}`}
+                    className="text-sm font-sans font-bold text-blue-700 hover:text-black uppercase tracking-widest transition-colors"
+                >
+                    Read Full Story &rarr;
+                </Link>
+            </div>
         </div>
     );
 };

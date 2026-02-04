@@ -1,61 +1,64 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
+
+const CATEGORIES = [
+    "World", "Business", "U.S.", "Politics", "Economy", "Tech",
+    "Markets & Finance", "Opinion", "Free Expression", "Arts",
+    "Lifestyle", "Real Estate", "Personal Finance", "Health", "Style", "Sports"
+];
 
 const Header = () => {
-    const currentDate = new Date().toLocaleDateString('en-US', {
-        weekday: 'long',
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric',
-    });
+    const location = useLocation();
+    const today = new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
 
     return (
-        <header className="border-b-4 border-black mb-8">
-            {/* Top Bar with Login/Subscribe placeholders found in WSJ */}
-            <div className="flex justify-between items-center py-1 px-4 border-b border-gray-300 text-xs font-sans uppercase tracking-wider">
-                <div className="flex gap-4">
-                    <span>English Edition</span>
-                    <span>Today's Paper</span>
-                </div>
-                <div className="flex gap-4">
-                    <span className="cursor-pointer hover:underline">Sign In</span>
-                    <span className="font-bold cursor-pointer hover:underline">Subscribe</span>
+        <header className="font-sans">
+            {/* Top Bar: Date */}
+            <div className="bg-white border-b border-gray-200 py-1">
+                <div className="container flex justify-between items-center text-[10px] uppercase font-bold tracking-widest text-gray-500">
+                    <div>{today}</div>
+                    <div className="flex gap-4">
+                        {/* Functional links can go here later */}
+                    </div>
                 </div>
             </div>
 
-            {/* Main Branding */}
-            <div className="py-6 text-center">
-                <Link to="/" className="no-underline text-black">
-                    <h1 className="text-5xl md:text-7xl font-serif font-black tracking-tight mb-2">
-                        The News Journal
+            {/* Main Logo Area */}
+            <div className="py-6 text-center border-b border-black relative">
+                <Link to="/" className="inline-block group">
+                    <h1 className="font-serif text-4xl lg:text-6xl font-black tracking-tight leading-none group-hover:opacity-90 transition-opacity">
+                        THE DAILY AGENT.
                     </h1>
                 </Link>
-                <div className="flex justify-center items-center gap-4 text-sm font-sans text-gray-600 border-t border-b border-gray-200 py-2 mt-4 mx-4 md:mx-auto max-w-6xl">
-                    <span className="font-bold text-black uppercase">{currentDate}</span>
-                    <span className="hidden md:inline">|</span>
-                    <span className="hidden md:inline">Business & Finance News</span>
+                <div className="hidden lg:block absolute right-0 bottom-6 text-xs font-bold text-gray-400 uppercase tracking-widest pr-4">
+                    AI Edition
                 </div>
             </div>
 
-            {/* Navigation */}
-            <nav className="flex justify-center py-3 border-b border-black md:mx-4">
-                <ul className="flex gap-8 font-sans font-bold text-sm uppercase tracking-widest">
-                    <li>
-                        <Link to="/" className="hover:text-gray-600 transition-colors">Home</Link>
-                    </li>
-                    <li>
-                        <Link to="/writers" className="hover:text-gray-600 transition-colors">Writers</Link>
-                    </li>
-                    <li>
-                        <span className="text-gray-400 cursor-not-allowed">Opinion</span>
-                    </li>
-                    <li>
-                        <span className="text-gray-400 cursor-not-allowed">Market</span>
-                    </li>
-                    <li>
-                        <span className="text-gray-400 cursor-not-allowed">Tech</span>
-                    </li>
-                </ul>
+            {/* Navigation Bar */}
+            <nav className="border-b border-gray-200 shadow-sm sticky top-0 bg-white z-50">
+                <div className="container overflow-hidden">
+                    <ul className="flex items-center gap-6 overflow-x-auto no-scrollbar py-3 text-xs font-bold uppercase tracking-wider whitespace-nowrap mask-linear-fade">
+                        <li className="flex-shrink-0">
+                            <Link
+                                to="/"
+                                className={`hover:text-[#0274b6] transition-colors ${location.pathname === '/' ? 'text-black border-b-2 border-black pb-3' : 'text-gray-600'}`}
+                            >
+                                Home
+                            </Link>
+                        </li>
+                        {CATEGORIES.map(cat => (
+                            <li key={cat} className="flex-shrink-0">
+                                <Link
+                                    to={`/category/${cat}`}
+                                    className={`hover:text-[#0274b6] transition-colors ${decodeURIComponent(location.pathname) === `/category/${cat}` ? 'text-black border-b-2 border-black pb-3' : 'text-gray-600'}`}
+                                >
+                                    {cat}
+                                </Link>
+                            </li>
+                        ))}
+                    </ul>
+                </div>
             </nav>
         </header>
     );

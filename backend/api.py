@@ -28,17 +28,49 @@ def load_json(filepath):
             return []
     return []
 
+from fastapi.responses import JSONResponse
+
 @app.get("/")
 def read_root():
     return {"status": "The Printing Press is running"}
 
 @app.get("/articles")
 def get_articles():
-    return load_json(ARTICLES_FILE)
+    content = load_json(ARTICLES_FILE)
+    headers = {
+        "Cache-Control": "no-cache, no-store, must-revalidate", 
+        "Pragma": "no-cache", 
+        "Expires": "0"
+    }
+    return JSONResponse(content=content, headers=headers)
 
 @app.get("/assignments")
 def get_assignments():
-    return load_json(ASSIGNMENTS_FILE)
+    content = load_json(ASSIGNMENTS_FILE)
+    headers = {
+        "Cache-Control": "no-cache, no-store, must-revalidate", 
+        "Pragma": "no-cache", 
+        "Expires": "0"
+    }
+    return JSONResponse(content=content, headers=headers)
+
+import threading
+import time
+from backend.writer import publisher
+
+def run_publisher_loop():
+    while True:
+        try:
+            publisher.publish_pending_dossiers()
+        except Exception as e:
+            print(f"Publisher Loop Error: {e}")
+        time.sleep(10)
+
+@app.on_event("startup")
+def startup_event():
+    # Start publisher in background thread
+    t = threading.Thread(target=run_publisher_loop, daemon=True)
+    t.start()
 
 if __name__ == "__main__":
     import uvicorn

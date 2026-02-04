@@ -35,13 +35,26 @@ def process_assignments():
         
         # 2. Scrape & Store
         facts = []
+        images = []
         for result in search_results[:3]: # Limit to top 3
             url = result['url']
-            content = scraper.scrape_url(url)
-            if content:
+            scrape_data = scraper.scrape_url(url)
+            
+            if isinstance(scrape_data, dict) and scrape_data.get('text'):
+                content = scrape_data['text']
+                image = scrape_data.get('image')
+                
+                if image:
+                    images.append(image)
+                
                 meta = {"source": url, "title": result.get('title', 'Unknown')}
                 memory.store_research(content, meta)
-                facts.append(f"Source: {url}\nSummary: {content[:500]}...") # Keep a summary for the dossier
+                facts.append(f"Source: {url}\nSummary: {content[:500]}...") # Keep a summary
+            elif isinstance(scrape_data, str) and scrape_data:
+                 # Fallback for legacy
+                 meta = {"source": url, "title": result.get('title', 'Unknown')}
+                 memory.store_research(scrape_data, meta)
+                 facts.append(f"Source: {url}\nSummary: {scrape_data[:500]}...")
                 
         # 3. Compile Dossier
         # In a full agent, we'd loop RAG queries here. 
@@ -51,6 +64,7 @@ def process_assignments():
             "title": ticket['title'],
             "status": "researched",
             "search_results": search_results,
+            "images": images,
             "key_facts": facts, # Simple list for now
             "generated_at": time.strftime('%Y-%m-%d %H:%M:%S')
         }

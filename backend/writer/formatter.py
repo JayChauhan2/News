@@ -1,4 +1,4 @@
-from llm_client import generate_json
+from backend.llm_client import generate_json
 
 def format_article(draft):
     """
