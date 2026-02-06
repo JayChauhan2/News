@@ -15,7 +15,15 @@ from backend.writer import publisher
 def job():
     print(f"\n[{time.strftime('%H:%M:%S')}] Watchtower Job Started")
     # 1. Fetch
-    articles = sources.fetch_all_news()
+    rss_articles = sources.fetch_all_news()
+    try:
+        from backend.watchtower import trend_spotter
+        web_articles = trend_spotter.fetch_trending_news()
+    except Exception as e:
+        print(f"Trend Spotter failed: {e}")
+        web_articles = []
+    
+    articles = rss_articles + web_articles
     
     # 2. Filter / Deduplicate (Clustering)
     if articles:

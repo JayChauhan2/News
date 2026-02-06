@@ -14,8 +14,8 @@ const Header = () => {
     return (
         <header className="font-sans">
             {/* Top Bar: Date */}
-            <div className="bg-white border-b border-gray-200 py-1">
-                <div className="container flex justify-between items-center text-[10px] uppercase font-bold tracking-widest text-gray-500">
+            <div className="bg-white border-b border-gray-200 py-3">
+                <div className="container flex justify-between items-center text-[10px] uppercase font-bold tracking-widest text-gray-500 px-4">
                     <div>{today}</div>
                     <div className="flex gap-4">
                         {/* Functional links can go here later */}
@@ -24,21 +24,40 @@ const Header = () => {
             </div>
 
             {/* Main Logo Area */}
-            <div className="py-6 text-center border-b border-black relative">
-                <Link to="/" className="inline-block group">
-                    <h1 className="font-serif text-4xl lg:text-6xl font-black tracking-tight leading-none group-hover:opacity-90 transition-opacity">
-                        THE DAILY AGENT.
-                    </h1>
-                </Link>
-                <div className="hidden lg:block absolute right-0 bottom-6 text-xs font-bold text-gray-400 uppercase tracking-widest pr-4">
-                    AI Edition
+            <div className="pt-10 pb-8 border-b border-black">
+                <div className="container mx-auto px-4">
+                    <div className="flex flex-col lg:flex-row items-center lg:items-end justify-between relative">
+                        {/* Placeholder for centering balance if needed, or just use absolute centering methodology manually if flex fails, 
+                            but simpler: Just centered text with absolute right is standard for this. 
+                            Let's try a grid to be perfect. 
+                        */}
+
+                        {/* Left spacer to balance grid */}
+                        <div className="hidden lg:block lg:w-1/4"></div>
+
+                        {/* Centered Logo */}
+                        <div className="text-center lg:w-1/2">
+                            <Link to="/" className="inline-block group">
+                                <h1 className="font-serif text-4xl lg:text-6xl font-black tracking-tight leading-none group-hover:opacity-90 transition-opacity">
+                                    THE DAILY AGENT.
+                                </h1>
+                            </Link>
+                        </div>
+
+                        {/* Right: AI Edition */}
+                        <div className="lg:w-1/4 text-center lg:text-right mt-2 lg:mt-0">
+                            <span className="text-xs font-bold text-gray-400 uppercase tracking-widest">
+                                AI Edition
+                            </span>
+                        </div>
+                    </div>
                 </div>
             </div>
 
             {/* Navigation Bar */}
             <nav className="border-b border-gray-200 shadow-sm sticky top-0 bg-white z-50">
                 <div className="container overflow-hidden">
-                    <ul className="flex items-center gap-6 overflow-x-auto no-scrollbar py-3 text-xs font-bold uppercase tracking-wider whitespace-nowrap mask-linear-fade">
+                    <ul className="flex items-center gap-6 overflow-x-auto lg:overflow-visible lg:flex-wrap lg:justify-center no-scrollbar py-3 text-xs font-bold uppercase tracking-wider whitespace-nowrap mask-linear-fade">
                         <li className="flex-shrink-0">
                             <Link
                                 to="/"

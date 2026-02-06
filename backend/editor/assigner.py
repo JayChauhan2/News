@@ -3,6 +3,7 @@ import os
 import time
 
 ASSIGNMENTS_FILE = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), 'public', 'assignments.json')
+ARTICLES_FILE = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), 'public', 'articles.json')
 
 def create_assignments(scored_clusters):
     """
@@ -13,7 +14,7 @@ def create_assignments(scored_clusters):
     new_tickets = []
     
     for cluster, score_data in scored_clusters:
-        if score_data['score'] >= 7:
+        if score_data['score'] >= 5:
             # Create a ticket from the most representative article (the first one)
             main_article = cluster[0]
             
@@ -37,6 +38,18 @@ def create_assignments(scored_clusters):
                 existing_tickets = json.load(f)
         except json.JSONDecodeError:
             pass
+
+    # Load published articles to check for duplicates
+    published_titles = set()
+    if os.path.exists(ARTICLES_FILE):
+        try:
+            with open(ARTICLES_FILE, 'r') as f:
+                articles = json.load(f)
+                published_titles = {a['headline'] for a in articles if 'headline' in a}
+                # Also add title if present (old format)
+                published_titles.update({a['title'] for a in articles if 'title' in a})
+        except json.JSONDecodeError:
+            pass
             
     # Deduplicate assignments based on title (simple check)
     existing_titles = {t['title'] for t in existing_tickets}
@@ -44,7 +57,7 @@ def create_assignments(scored_clusters):
     
     added_count = 0
     for t in new_tickets:
-        if t['title'] not in existing_titles:
+        if t['title'] not in existing_titles and t['title'] not in published_titles:
             final_tickets.append(t)
             added_count += 1
             

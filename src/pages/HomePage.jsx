@@ -66,12 +66,13 @@ const HomePage = () => {
                                     <img
                                         src={leadStory.image_url}
                                         alt={leadStory.headline}
-                                        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                                        className="w-full h-full object-cover grayscale-[10%] group-hover:grayscale-0 transition-all duration-500"
                                     />
                                 </div>
                             ) : (
-                                <div className="w-full h-64 bg-gray-100 flex items-center justify-center text-gray-300 font-serif italic">
-                                    No Image Available
+                                <div className="w-full aspect-video bg-gray-100 flex flex-col items-center justify-center text-gray-400 font-serif italic border border-gray-200">
+                                    <span className="text-2xl mb-2 opacity-20">The Daily Agent</span>
+                                    <span className="text-sm">Image Unavailable</span>
                                 </div>
                             )}
 
@@ -119,7 +120,7 @@ const HomePage = () => {
             {/* RIGHT COLUMN: Sidebar / Opinion / Popular (4 Cols) */}
             <aside className="lg:col-span-4 pl-0 lg:pl-8 pt-8 lg:pt-0">
                 <div className="sticky top-24">
-                    <h4 className="font-sans text-xs font-bold uppercase tracking-widest border-b border-black pb-2 mb-4">
+                    <h4 className="font-sans text-xs font-bold uppercase tracking-widest border-b border-black pb-3 mb-6">
                         Latest Headlines
                     </h4>
 
@@ -128,10 +129,19 @@ const HomePage = () => {
                             <Link key={article.id} to={`/article/${article.id}`} className="block group pt-4 first:pt-0">
                                 <div className="flex flex-row-reverse gap-4">
                                     {article.image_url && (
-                                        <img src={article.image_url} className="w-20 h-20 object-cover bg-gray-100" alt="" />
+                                        <div
+                                            className="flex-shrink-0 w-20 h-20 overflow-hidden bg-gray-100 border border-gray-100 relative"
+                                            style={{ minWidth: '80px', width: '80px', height: '80px' }}
+                                        >
+                                            <img
+                                                src={article.image_url}
+                                                className="w-full h-full object-cover"
+                                                alt=""
+                                            />
+                                        </div>
                                     )}
                                     <div className="flex-1">
-                                        <div className="text-[10px] font-bold uppercase text-[#0274b6] mb-1">
+                                        <div className="text-[10px] font-bold uppercase text-[#0274b6] mb-2">
                                             {article.category}
                                         </div>
                                         <h4 className="font-serif text-lg leading-tight font-medium group-hover:text-[#0274b6] transition-colors">

@@ -92,6 +92,23 @@ def publish_pending_dossiers():
             print(f"Writer: Removed processed dossier {filename}")
             
             existing_ids.add(ticket_id) 
+
+            # Remove from Assignments (To stop re-process loop)
+            ASSIGNMENTS_FILE = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), 'public', 'assignments.json')
+            if os.path.exists(ASSIGNMENTS_FILE):
+                try:
+                    with open(ASSIGNMENTS_FILE, 'r') as af:
+                        assignments = json.load(af)
+                    
+                    # Filter out the published ticket
+                    new_assignments = [a for a in assignments if a.get('id') != ticket_id]
+                    
+                    if len(new_assignments) < len(assignments):
+                        with open(ASSIGNMENTS_FILE, 'w') as af:
+                            json.dump(new_assignments, af, indent=2)
+                        print(f"Writer: Removed ticket {ticket_id} from assignments.")
+                except Exception as e:
+                    print(f"Writer: Failed to update assignments file: {e}")
             
         except Exception as e:
             print(f"Writer: Failed to save article or remove dossier {filename}: {e}")
