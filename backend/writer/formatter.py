@@ -13,13 +13,11 @@ def format_article(draft):
     Current Image Prompt: {draft.get('image_prompt')}
     
     Tasks:
-    1. Generate 5 relevant SEO hashtags.
-    2. Write a compelling meta description (max 160 chars).
-    3. Refine the image prompt to be specifically optimized for DALL-E 3 (photorealistic, dramatic lighting, 16:9).
+    1. Write a compelling meta description (max 160 chars).
+    2. Refine the image prompt to be specifically optimized for DALL-E 3 (photorealistic, dramatic lighting, 16:9).
     
     Output ONLY a JSON object:
     {{
-        "seo_tags": ["#tag1", "#tag2", ...],
         "meta_description": "...",
         "hero_image_prompt": "Refined DALL-E 3 prompt..."
     }}
@@ -32,7 +30,7 @@ def format_article(draft):
     if formatting_data:
         # Merge results
         final_article = draft.copy()
-        final_article['seo_tags'] = formatting_data.get('seo_tags', [])
+        final_article['seo_tags'] = []
         final_article['meta_description'] = formatting_data.get('meta_description', "")
         final_article['image_prompt'] = formatting_data.get('hero_image_prompt', draft.get('image_prompt'))
         

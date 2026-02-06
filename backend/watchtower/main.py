@@ -56,18 +56,17 @@ def job():
         print("No articles found.")
 
 def main():
-    print("Starting The Watchtower Agent...")
+    print("Starting The Watchtower Agent (Continuous Mode)...")
     print("Press Ctrl+C to stop.")
     
-    # Run once immediately on startup
-    job()
-    
-    # Schedule to run every 10 minutes
-    schedule.every(10).minutes.do(job)
-    
     while True:
-        schedule.run_pending()
-        time.sleep(1)
+        try:
+            job()
+            print(f"[{time.strftime('%H:%M:%S')}] Cycle complete. Sleeping for 60 seconds...")
+        except Exception as e:
+             print(f"Error in Watchtower loop: {e}")
+        
+        time.sleep(60)
 
 if __name__ == "__main__":
     main()

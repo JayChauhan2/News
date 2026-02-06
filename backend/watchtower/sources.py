@@ -3,11 +3,21 @@ import time
 
 # List of tech & news RSS feeds
 RSS_FEEDS = [
-    "http://feeds.feedburner.com/TechCrunch/",
-    "https://www.theverge.com/rss/index.xml",
-    "https://rss.nytimes.com/services/xml/rss/nyt/Technology.xml",
-    "http://feeds.arstechnica.com/arstechnica/index",
-    "https://www.wired.com/feed/rss"
+    # World & US
+    "https://rss.nytimes.com/services/xml/rss/nyt/World.xml",
+    "https://feeds.bbci.co.uk/news/world/rss.xml",
+    "https://rss.nytimes.com/services/xml/rss/nyt/US.xml",
+    "http://feeds.reuters.com/reuters/topNews",
+    
+    # Business & Markets
+    "https://search.cnbc.com/rs/search/combinedcms/view.xml?partnerId=wrss01&id=10000664", 
+    
+    # Tech (Substantive)
+    "https://www.technologyreview.com/feed/",
+    "https://techcrunch.com/feed/",
+    
+    # Politics
+    "https://rss.nytimes.com/services/xml/rss/nyt/Politics.xml"
 ]
 
 def fetch_all_news():

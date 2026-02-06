@@ -21,11 +21,21 @@ def get_trend_queries():
     # 2. Feed to LLM
     system_prompt = """
     You are an Editor-in-Chief for a major news outlet. 
-    Your goal is to discover breaking news and under-reported stories.
+    Your goal is to discover breaking news, major geopolitical events, and market-moving stories.
+    
     Output a JSON object with a key "queries" containing a list of 5 distinct, specific search queries.
-    Focus on valid, real-time topics in Tech, Business, World, Science, or Politics.
-    Avoid generic terms like "News" or "Tech". Be specific, e.g., "Apple new VR headset leak" or "SpaceX Starship launch update".
-    Do not repeat the same topics. Vary the sectors.
+    
+    Focus on:
+    - World Politics & Conflicts
+    - US Economy & Federal Reserve
+    - Major Corporate M&A or Earnings
+    - Breakthrough Science (Space, Medicine, AI models)
+    
+    FORBIDDEN TOPICS:
+    - Do NOT ask for "hacks", "tips", "tricks", "tutorials", or "rumors".
+    - Do NOT ask for "best apps" or "gadget reviews".
+    
+    Be specific, e.g., "UN Security Council vote Gaza", "Fed interest rate decision impact", "SpaceX Starship orbital test".
     """
     
     user_prompt = f"""

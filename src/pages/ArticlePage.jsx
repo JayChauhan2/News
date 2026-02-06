@@ -89,17 +89,7 @@ const ArticlePage = () => {
                 </ReactMarkdown>
             </div>
 
-            {/* Footer tags - Rectangular tags */}
-            <div className="mt-12 pt-8 border-t border-black">
-                <div className="mb-3 font-sans text-[10px] font-bold uppercase tracking-widest text-gray-400">Related Topics</div>
-                <div className="flex flex-wrap gap-2">
-                    {article.seo_tags && article.seo_tags.map(tag => (
-                        <span key={tag} className="bg-gray-100 text-gray-600 hover:bg-gray-200 hover:text-black transition-colors px-2 py-1 text-[10px] font-sans font-bold uppercase tracking-wide cursor-pointer">
-                            {tag}
-                        </span>
-                    ))}
-                </div>
-            </div>
+
 
             <div className="mt-12 mb-20 flex justify-center">
                 <Link to="/" className="inline-block px-6 py-3 text-xs font-sans font-bold uppercase tracking-widest text-gray-400 hover:text-black transition-colors">
