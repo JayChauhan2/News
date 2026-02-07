@@ -33,7 +33,8 @@ def get_x_topics():
     topics = []
     print(f"[{time.strftime('%H:%M:%S')}] X Monitor: Scanning top sources...")
     
-    with DDGS() as ddgs:
+    # Pass verify=False to bypass SSL errors
+    with DDGS(verify=False) as ddgs:
         # Shuffle sources to vary the "feed" each time
         selected_sources = random.sample(LEGIT_SOURCES, k=4)
         
