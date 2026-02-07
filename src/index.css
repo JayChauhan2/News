@@ -2,158 +2,74 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --font-serif: "Escrow", "Georgia", "Times New Roman", serif;
-  --font-sans: "Retina", "Arial", "Helvetica", sans-serif;
+/* Import WSJ-style fonts */
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,900;1,400;1,700&family=Retina:wght@400&family=Lato:wght@400;700&display=swap');
 
-  --color-black: #000000;
+:root {
+  /* Typography */
+  --font-headline: "Playfair Display", "Georgia", "Times New Roman", serif;
+  --font-body: "Escrow", "Georgia", "Times New Roman", serif;
+  /* Fallback to Playfair/Georgia if Escrow unavailable */
+  --font-sans: "Retina", "Lato", "Arial", sans-serif;
+
+  /* Colors */
+  --color-black: #1a1a1a;
   --color-gray-dark: #333333;
   --color-gray-med: #666666;
   --color-gray-light: #e2e2e2;
   --color-bg: #ffffff;
-  --color-accent: #004d80;
-  /* WSJ-ish Blue links - darker */
-  --color-border: #d1d1d1;
-
-  --spacing-unit: 8px;
+  --color-accent: #0274b6;
+  /* WSJ Blue */
+  --color-border: #e2e2e2;
+  --color-paper: #fcfbf7;
+  /* Very subtle paper tint for special sections */
 }
 
 body {
   margin: 0;
   padding: 0;
-  font-family: var(--font-serif);
+  font-family: var(--font-body);
   background-color: var(--color-bg);
   color: var(--color-black);
   -webkit-font-smoothing: antialiased;
+  line-height: 1.5;
 }
 
+/* Headings */
 h1,
 h2,
 h3,
 h4,
 h5,
 h6 {
+  font-family: var(--font-headline);
   font-weight: 700;
-  margin: 0 0 0.5em 0;
+  margin: 0;
   line-height: 1.1;
+  color: var(--color-black);
 }
 
 a {
   text-decoration: none;
   color: inherit;
+  transition: color 0.2s;
 }
 
 a:hover {
-  text-decoration: underline;
+  color: var(--color-accent);
 }
 
 /* Utilities */
+.font-headline {
+  font-family: var(--font-headline);
+}
+
+.font-body {
+  font-family: var(--font-body);
+}
+
 .font-sans {
   font-family: var(--font-sans);
-}
-
-.font-serif {
-  font-family: var(--font-serif);
-}
-
-.text-xs {
-  font-size: 0.75rem;
-}
-
-.text-sm {
-  font-size: 0.875rem;
-}
-
-.text-base {
-  font-size: 1rem;
-}
-
-.text-lg {
-  font-size: 1.125rem;
-}
-
-.text-xl {
-  font-size: 1.25rem;
-}
-
-.text-2xl {
-  font-size: 1.5rem;
-}
-
-.text-3xl {
-  font-size: 1.875rem;
-}
-
-.text-4xl {
-  font-size: 2.25rem;
-}
-
-.uppercase {
-  text-transform: uppercase;
-}
-
-.font-bold {
-  font-weight: 700;
-}
-
-.tracking-widest {
-  letter-spacing: 0.1em;
-}
-
-.container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 16px;
-}
-
-.grid {
-  display: grid;
-}
-
-.flex {
-  display: flex;
-}
-
-.hidden {
-  display: none;
-}
-
-@media (min-width: 1024px) {
-  .lg\:block {
-    display: block;
-  }
-
-  .lg\:grid-cols-12 {
-    grid-template-columns: repeat(12, minmax(0, 1fr));
-  }
-
-  .lg\:col-span-8 {
-    grid-column: span 8 / span 8;
-  }
-
-  .lg\:col-span-4 {
-    grid-column: span 4 / span 4;
-  }
-
-  .lg\:col-span-3 {
-    grid-column: span 3 / span 3;
-  }
-
-  .lg\:col-span-6 {
-    grid-column: span 6 / span 6;
-  }
-
-  .lg\:flex-wrap {
-    flex-wrap: wrap;
-  }
-
-  .lg\:justify-center {
-    justify-content: center;
-  }
-
-  .lg\:overflow-visible {
-    overflow: visible;
-  }
 }
 
 .border-b {
@@ -164,87 +80,54 @@ a:hover {
   border-top: 1px solid var(--color-border);
 }
 
-.border-r {
-  border-right: 1px solid var(--color-border);
-}
-
 .border-l {
   border-left: 1px solid var(--color-border);
 }
 
-.py-2 {
-  padding-top: 0.5rem;
-  padding-bottom: 0.5rem;
+.border-r {
+  border-right: 1px solid var(--color-border);
 }
 
-.py-4 {
-  padding-top: 1rem;
-  padding-bottom: 1rem;
+.container {
+  max-width: 1280px;
+  /* Wider for 3-col layout */
+  margin: 0 auto;
+  padding: 0 20px;
 }
 
-.px-4 {
-  padding-left: 1rem;
-  padding-right: 1rem;
+/* WSJ-specific styles */
+.section-header {
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #333;
+  border-top: 1px solid #000;
+  border-bottom: 1px solid var(--color-border);
+  padding: 6px 0;
+  margin-bottom: 16px;
 }
 
-.mb-4 {
-  margin-bottom: 1rem;
+.timestamp {
+  font-family: var(--font-sans);
+  font-size: 0.7rem;
+  color: var(--color-gray-med);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
 
-.mt-4 {
-  margin-top: 1rem;
+.kicker {
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--color-accent);
+  text-transform: uppercase;
+  margin-bottom: 4px;
+  display: block;
 }
 
-.gap-4 {
-  gap: 1rem;
-}
-
-.gap-4 {
-  gap: 1rem;
-}
-
-.gap-6 {
-  gap: 1.5rem;
-}
-
-.gap-8 {
-  gap: 2rem;
-}
-
-.items-center {
-  align-items: center;
-}
-
-.justify-center {
-  justify-content: center;
-}
-
-.justify-between {
-  justify-content: space-between;
-}
-
-.flex-wrap {
-  flex-wrap: wrap;
-}
-
-.whitespace-nowrap {
-  white-space: nowrap;
-}
-
-.overflow-x-auto {
-  overflow-x: auto;
-}
-
-.overflow-hidden {
-  overflow: hidden;
-}
-
-.mask-linear-fade {
-  mask-image: linear-gradient(to right, transparent, black 20px, black calc(100% - 20px), transparent);
-  -webkit-mask-image: linear-gradient(to right, transparent, black 20px, black calc(100% - 20px), transparent);
-}
-
-/* Custom Scrollbar for hidden nav overflow */
+/* Scrollbar hiding */
 .no-scrollbar::-webkit-scrollbar {
   display: none;
 }
