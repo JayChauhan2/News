@@ -26,6 +26,7 @@ def create_assignments(scored_clusters):
                 "title": main_article['title'],
                 "source_link": main_article['link'],
                 "cluster_size": len(cluster),
+                "category": main_article.get("category", "Tech"),
                 "created_at": time.strftime('%Y-%m-%d %H:%M:%S')
             }
             new_tickets.append(ticket)

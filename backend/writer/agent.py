@@ -20,6 +20,8 @@ def write_article(dossier, style="WITTY"):
     Do NOT make up facts not present here.
     
     Title: {dossier['title']}
+    Target Category: {dossier.get('category', 'Tech')} (You may add a second relevant category if needed)
+    Available Categories: World, Business, U.S., Politics, Economy, Tech, Markets & Finance, Opinion, Free Expression, Arts, Lifestyle, Real Estate, Personal Finance, Health, Style, Sports.
     
     Key Facts:
     {facts_text}
@@ -30,7 +32,7 @@ def write_article(dossier, style="WITTY"):
     Output ONLY a JSON object with the following structure:
     {{
         "headline": "A catchy, click-worthy headline",
-        "category": "Select ONE from: World, Business, U.S., Politics, Economy, Tech, Markets & Finance, Opinion, Free Expression, Arts, Lifestyle, Real Estate, Personal Finance, Health, Style, Sports",
+        "category": ["Category1", "OptionalCategory2"], 
         "content": "The full markdown article content...",
         "image_prompt": "A description for an AI image generator to create a hero image"
     }}

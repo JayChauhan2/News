@@ -62,6 +62,7 @@ def process_assignments():
         dossier = {
             "ticket_id": ticket_id,
             "title": ticket['title'],
+            "category": ticket.get("category", "Tech"),
             "status": "researched",
             "search_results": search_results,
             "images": images,

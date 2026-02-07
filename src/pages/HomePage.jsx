@@ -17,7 +17,12 @@ const HomePage = () => {
                     // Filter if category is present
                     let filtered = data;
                     if (category) {
-                        filtered = data.filter(a => a.category === category);
+                        filtered = data.filter(a => {
+                            if (Array.isArray(a.category)) {
+                                return a.category.includes(category);
+                            }
+                            return a.category === category;
+                        });
                     }
                     setArticles(filtered);
                     setLoading(false);
@@ -78,7 +83,7 @@ const HomePage = () => {
 
                             <div className="mt-2">
                                 <div className="flex items-center gap-2 mb-2 font-sans text-[10px] font-bold uppercase tracking-widest text-[#0274b6]">
-                                    {leadStory.category || "Top Story"}
+                                    {Array.isArray(leadStory.category) ? leadStory.category.join(", ") : (leadStory.category || "Top Story")}
                                     <span className="text-gray-300">|</span>
                                     <span className="text-gray-400 font-normal">{getTimeAgo(leadStory.published_at)}</span>
                                 </div>
@@ -101,7 +106,7 @@ const HomePage = () => {
                         <div key={article.id} className="group">
                             <Link to={`/article/${article.id}`}>
                                 <div className="flex items-center gap-2 mb-2 font-sans text-[10px] font-bold uppercase tracking-wide text-gray-400">
-                                    <span className="text-[#0274b6]">{article.category}</span>
+                                    <span className="text-[#0274b6]">{Array.isArray(article.category) ? article.category.join(", ") : article.category}</span>
                                     <span>•</span>
                                     <span>{getTimeAgo(article.published_at)}</span>
                                 </div>
@@ -142,7 +147,7 @@ const HomePage = () => {
                                     )}
                                     <div className="flex-1">
                                         <div className="text-[10px] font-bold uppercase text-[#0274b6] mb-2">
-                                            {article.category}
+                                            {Array.isArray(article.category) ? article.category.join(", ") : article.category}
                                         </div>
                                         <h4 className="font-serif text-lg leading-tight font-medium group-hover:text-[#0274b6] transition-colors">
                                             {article.headline}

@@ -61,7 +61,7 @@ def publish_pending_dossiers():
         final_article = {
             "id": ticket_id,
             "headline": final_draft['headline'],
-            "category": final_draft.get('category', 'Tech'), # Default to Tech
+            "category": final_draft.get('category') or dossier.get('category', 'Tech'), # Handle list or string
             "content": final_draft['content'],
             "image_prompt": final_draft['image_prompt'],
             "image_url": dossier.get('images', [None])[0] if dossier.get('images') else None,
