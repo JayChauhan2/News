@@ -50,10 +50,12 @@ def process_assignments():
                 meta = {"source": url, "title": result.get('title', 'Unknown')}
                 memory.store_research(content, meta)
                 facts.append(f"Source: {url}\nSummary: {content[:500]}...") # Keep a summary
-                 # Fallback for legacy
-                 meta = {"source": url, "title": result.get('title', 'Unknown')}
-                 memory.store_research(scrape_data, meta)
-                 facts.append(f"Source: {url}\nSummary: {scrape_data[:500]}...")
+            else:
+                # Fallback for legacy
+                if scrape_data:
+                    meta = {"source": url, "title": result.get('title', 'Unknown')}
+                    memory.store_research(scrape_data, meta)
+                    facts.append(f"Source: {url}\nSummary: {scrape_data[:500]}...")
                  
         # 3. Fallback Image Search
         if not images:

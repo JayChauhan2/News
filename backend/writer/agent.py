@@ -44,6 +44,15 @@ def write_article(dossier, style="WITTY"):
          # Generate image prompt if missing
         if 'image_prompt' not in result:
              result['image_prompt'] = f"A photo representing {result.get('headline', 'news')}"
+
+        # Append source link
+        source_url = dossier.get('source_link')
+        if not source_url and dossier.get('search_results'):
+            source_url = dossier['search_results'][0].get('url')
+        
+        if source_url:
+            result['content'] += f"\n\n[Source]({source_url})"
+            
         return result
         
     print(f"Writer: Failed to generate article for {dossier.get('ticket_id')}")
