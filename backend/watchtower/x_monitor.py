@@ -1,6 +1,16 @@
 from ddgs import DDGS
 import time
 import random
+import ssl
+import certifi
+
+# Use certifi's CA bundle for SSL verification (fixes ConnectError)
+def create_ssl_context():
+    context = ssl.create_default_context(cafile=certifi.where())
+    return context
+
+# Override default SSL context creation
+ssl._create_default_https_context = create_ssl_context
 
 # List of legitimate news sources on X
 LEGIT_SOURCES = [

@@ -42,24 +42,32 @@ def create_assignments(scored_clusters):
 
     # Load published articles to check for duplicates
     published_titles = set()
+    published_links = set()
+    
     if os.path.exists(ARTICLES_FILE):
         try:
             with open(ARTICLES_FILE, 'r') as f:
                 articles = json.load(f)
                 published_titles = {a['headline'] for a in articles if 'headline' in a}
-                # Also add title if present (old format)
+                # Also add title/original_title if present
                 published_titles.update({a['title'] for a in articles if 'title' in a})
+                published_titles.update({a['original_title'] for a in articles if 'original_title' in a})
+                
+                published_links = {a['source_link'] for a in articles if 'source_link' in a}
         except json.JSONDecodeError:
             pass
             
     # Deduplicate assignments based on title (simple check + fuzzy match)
     existing_titles = {t['title'] for t in existing_tickets}
+    existing_links = {t['source_link'] for t in existing_tickets if 'source_link' in t}
+    
     final_tickets = existing_tickets
     
     import difflib
     from backend import llm_client
 
     def is_similar(title1, title2, threshold=0.85):
+        if not title1 or not title2: return False
         return difflib.SequenceMatcher(None, title1.lower(), title2.lower()).ratio() > threshold
 
     def check_semantic_duplicates_batch(new_title, existing_titles_list):
@@ -94,38 +102,53 @@ def create_assignments(scored_clusters):
         except:
             return None
 
+    # Combined sets of everything we know about
+    known_titles_set = existing_titles.union(published_titles)
+    known_links_set = existing_links.union(published_links)
+    
+    known_titles_list = list(known_titles_set)
+    
     added_count = 0
     for t in new_tickets:
-        if t['title'] in existing_titles or t['title'] in published_titles:
+        title = t['title']
+        link = t.get('source_link')
+        
+        # 1. Exact Link Match (Strongest)
+        if link and link in known_links_set:
+            print(f"Assigner: Skipped duplicate (Link Match): {link}")
             continue
             
-        # Fuzzy check against assignments
-        is_duplicate = False
-        for ex_ticket in existing_tickets:
-             if is_similar(t['title'], ex_ticket['title']):
-                 print(f"Assigner: Skipped duplicate (similar to pending): '{t['title']}' ≈ '{ex_ticket['title']}'")
-                 is_duplicate = True
+        # 2. Exact String Match (Fastest)
+        if title in known_titles_set:
+            print(f"Assigner: Skipped duplicate (Exact Title): {title}")
+            continue
+            
+        # 3. Fuzzy Match (Fast)
+        is_fuzzy_dupe = False
+        for known in known_titles_list:
+             if is_similar(title, known, threshold=0.80): # Lowered threshold
+                 print(f"Assigner: Skipped duplicate (Fuzzy): '{title}' ≈ '{known}'")
+                 is_fuzzy_dupe = True
                  break
-        if is_duplicate: continue
-
-        # Fuzzy check against published articles
-        for title in published_titles:
-             if is_similar(t['title'], title):
-                 print(f"Assigner: Skipped duplicate (similar to published): '{t['title']}' ≈ '{title}'")
-                 is_duplicate = True
-                 break
-        if is_duplicate: continue
-
-        # --- LLM Semantic Check (The "Judge") ---
-        # Combine distinct titles to check against
-        all_existing = list(existing_titles.union(published_titles))
-        semantic_match = check_semantic_duplicates_batch(t['title'], all_existing)
+        if is_fuzzy_dupe: continue
+        
+        # 4. LLM Semantic Check (The "Judge")
+        # Check against the most recent 50 titles (more context)
+        recent_context = known_titles_list[:50]
+        
+        semantic_match = check_semantic_duplicates_batch(title, recent_context)
         
         if semantic_match:
-             print(f"Assigner: LLM Judge found duplicate: '{t['title']}' is the same event as '{semantic_match}'")
+             print(f"Assigner: LLM Judge found duplicate: '{title}' is the same event as '{semantic_match}'")
              continue
 
+        # If it passed all checks, add it
         final_tickets.append(t)
+        
+        # CRITICAL: Add to our known set so the NEXT ticket in this loop checks against THIS one
+        known_titles_set.add(title)
+        known_titles_list.insert(0, title) 
+        if link: known_links_set.add(link)
         added_count += 1
             
     # Save

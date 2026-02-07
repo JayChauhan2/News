@@ -61,6 +61,8 @@ def publish_pending_dossiers():
         final_article = {
             "id": ticket_id,
             "headline": final_draft['headline'],
+            "original_title": dossier.get('original_title') or dossier.get('title'), # Original RSS title
+            "source_link": dossier.get('source_link'), # Original RSS link
             "category": final_draft.get('category') or dossier.get('category', 'Tech'), # Handle list or string
             "content": final_draft['content'],
             "image_prompt": final_draft['image_prompt'],

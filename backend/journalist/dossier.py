@@ -50,18 +50,31 @@ def process_assignments():
                 meta = {"source": url, "title": result.get('title', 'Unknown')}
                 memory.store_research(content, meta)
                 facts.append(f"Source: {url}\nSummary: {content[:500]}...") # Keep a summary
-            elif isinstance(scrape_data, str) and scrape_data:
                  # Fallback for legacy
                  meta = {"source": url, "title": result.get('title', 'Unknown')}
                  memory.store_research(scrape_data, meta)
                  facts.append(f"Source: {url}\nSummary: {scrape_data[:500]}...")
+                 
+        # 3. Fallback Image Search
+        if not images:
+            print("Journalist: No images found in articles. Searching online...")
+            try:
+                found_images = search.search_images(ticket['title'])
+                if found_images:
+                    images.extend(found_images)
+                    print(f"Journalist: Found {len(found_images)} images online.")
+            except Exception as e:
+                print(f"Journalist: Image search failed: {e}")
                 
-        # 3. Compile Dossier
+        # 4. Compile Dossier
         # In a full agent, we'd loop RAG queries here. 
         # For MVP, we save the search summaries and metadata.
         dossier = {
             "ticket_id": ticket_id,
+            "ticket_id": ticket_id,
             "title": ticket['title'],
+            "original_title": ticket['title'], # Explicitly save for dedup
+            "source_link": ticket.get('source_link'), # Save for dedup
             "category": ticket.get("category", "Tech"),
             "status": "researched",
             "search_results": search_results,

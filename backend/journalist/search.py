@@ -1,4 +1,14 @@
 from ddgs import DDGS
+import ssl
+import certifi
+
+# Use certifi's CA bundle for SSL verification
+def create_ssl_context():
+    context = ssl.create_default_context(cafile=certifi.where())
+    return context
+
+# Override default SSL context creation
+ssl._create_default_https_context = create_ssl_context
 
 def search_topic(query):
     """
@@ -23,6 +33,28 @@ def search_topic(query):
                 })
                 
         return results
+        return results
     except Exception as e:
         print(f"Error searching DuckDuckGo: {e}")
+        return []
+
+def search_images(query):
+    """
+    Searches for images using DuckDuckGo.
+    Returns a list of image URLs.
+    """
+    print(f"Journalist: Searching for images related to '{query}'...")
+    images = []
+    
+    try:
+        with DDGS() as ddgs:
+            ddg_images = list(ddgs.images(query, max_results=3))
+            
+            for img in ddg_images:
+                if img.get('image'):
+                    images.append(img.get('image'))
+                    
+        return images
+    except Exception as e:
+        print(f"Error searching for images: {e}")
         return []
