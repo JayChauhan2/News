@@ -9,16 +9,5 @@
     "cluster_size": 1,
     "category": "Sports",
     "created_at": "2026-02-07 16:41:47"
-  },
-  {
-    "id": "1770501165_0",
-    "status": "pending",
-    "score": 5.7,
-    "reasoning": "The news has high impact as it involves diplomatic relations between the US and Iran, which can have significant geopolitical consequences. It has moderate novelty as it discusses a shift in Trump's approach towards Iran. However, it is not directly related to technology or AI, hence the low relevance score.",
-    "title": "Trump Reverts to Diplomacy With Iran, but the Road Is Narrow",
-    "source_link": "https://www.nytimes.com/2026/02/07/world/europe/iran-us-trump-diplomacy.html",
-    "cluster_size": 1,
-    "category": "World",
-    "created_at": "2026-02-07 16:52:45"
   }
 ]
