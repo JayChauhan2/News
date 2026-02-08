@@ -30,6 +30,10 @@ Analyze this lead and determine:
    - Ask for: "Court filings", "Patent applications", "Flight logs", "SEC disclosures", "git commit logs", "leaked memos".
 3. What is your STRATEGY to verify this without relying on the mainstream media narrative?
 
+CRITICAL: Check the "Current Date" against the "Lead".
+Current Date: {date}
+If the lead is describing an event that happened significantly in the past (e.g. > 1 week ago) and is not a "retrospective", marks it as "OLD NEWS".
+
 Output a JSON object with:
 "story_type": "Type of story",
 "best_evidence": "Description of the ideal primary source evidence",

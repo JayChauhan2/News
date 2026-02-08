@@ -40,10 +40,19 @@ def process_assignments():
         print("Journalist: Thinking about the lead...")
         status_manager.update_agent_status("The Investigative Journalist", "Journalist", "Thinking", "Formulating investigation strategy...")
         
-        t_sys = prompts.THINKING_PROMPT.replace("{lead}", lead)
+        t_sys = prompts.THINKING_PROMPT.replace("{lead}", lead).replace("{date}", time.strftime('%Y-%m-%d'))
         thoughts_data = llm_client.generate_json(t_sys, "Think about this story.")
         
         story_type = thoughts_data.get("story_type", "General News")
+        
+        # SKIP OLD NEWS
+        if "OLD NEWS" in story_type.upper():
+            print(f"Journalist: SKIPPING - Detected as Old News. ({story_type})")
+            status_manager.update_agent_status("The Investigative Journalist", "Journalist", "Skipping", f"Skipped old news: {ticket['title'][:30]}...")
+            # Mark as done so we don't try again immediately? Or just delete?
+            # For now, we'll just not create a dossier, effectively skipping it for this run.
+            continue
+
         best_evidence = thoughts_data.get("best_evidence", "Official statements")
         strategy = thoughts_data.get("investigation_strategy", "Search for primary sources")
         

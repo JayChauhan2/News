@@ -20,5 +20,16 @@
     "cluster_size": 2,
     "category": "Business",
     "created_at": "2026-02-08 12:56:37"
+  },
+  {
+    "id": "1770575660_0",
+    "status": "pending",
+    "score": 8.0,
+    "reasoning": "This news story about OpenAI's mission and hiring announcement has a high impact due to the organization's prominence in the AI field. The novelty is moderate as it reiterates their mission, but the hiring aspect adds some new information. The relevance is very high as it directly pertains to artificial general intelligence and OpenAI's work in this area.",
+    "title": "OpenAI (@OpenAI) / Twitter OpenAI\u2019s mission is to ensure that artificial general intelligence benefi",
+    "source_link": "https://twitter.com/openAI",
+    "cluster_size": 1,
+    "category": "Science",
+    "created_at": "2026-02-08 13:34:20"
   }
 ]

@@ -55,10 +55,10 @@ def get_x_topics():
                     except Exception:
                         results = []
 
-                    # Fallback: try without time limit if daily fails
-                    if not results:
-                         time.sleep(1)
-                         results = list(ddgs.text(query, max_results=3))
+                    # REMOVED FALLBACK: Do NOT search without time limit.
+                    # if not results:
+                    #      time.sleep(1)
+                    #      results = list(ddgs.text(query, max_results=3))
                     
                     for r in results:
                         title = r.get('title', '')
