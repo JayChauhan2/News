@@ -22,14 +22,14 @@
     "created_at": "2026-02-08 12:56:37"
   },
   {
-    "id": "1770575660_0",
+    "id": "1770584957_0",
     "status": "pending",
     "score": 8.0,
-    "reasoning": "This news story about OpenAI's mission and hiring announcement has a high impact due to the organization's prominence in the AI field. The novelty is moderate as it reiterates their mission, but the hiring aspect adds some new information. The relevance is very high as it directly pertains to artificial general intelligence and OpenAI's work in this area.",
-    "title": "OpenAI (@OpenAI) / Twitter OpenAI\u2019s mission is to ensure that artificial general intelligence benefi",
-    "source_link": "https://twitter.com/openAI",
+    "reasoning": "The news story is about technology news and analysis from TechCrunch, which has a significant impact on the tech industry. It is relevant to the tech/AI field and provides new information about founders and startup teams. However, the novelty score is slightly lower as it is a summary of existing content.",
+    "title": "twitter.com/TechCrunch Technology news and analysis with a focus on founders and startup teams. Got ",
+    "source_link": "https://twitter.com/TechCrunch",
     "cluster_size": 1,
-    "category": "Science",
-    "created_at": "2026-02-08 13:34:20"
+    "category": "Startups",
+    "created_at": "2026-02-08 16:09:17"
   }
 ]

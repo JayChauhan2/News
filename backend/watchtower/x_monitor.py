@@ -18,6 +18,68 @@ LEGIT_SOURCES = [
     "elonmusk", "sama", "paulg", "ycombinator", "NASA", "SpaceX", "GoogleAI", "OpenAI"
 ]
 
+BUSINESS_SOURCES = [
+    "cnbc.com", "reuters.com", "bloomberg.com", "wsj.com", "ft.com", 
+    "marketwatch.com", "finance.yahoo.com"
+]
+
+def get_business_signals():
+    """
+    Specifically looks for "Money" news: Deals, Earnings, Mergers, Markets.
+    """
+    topics = []
+    print(f"[{time.strftime('%H:%M:%S')}] X Monitor: Scanning BUSINESS sources (Direct News)...")
+    
+    try:
+        with DDGS(verify=False, timeout=20) as ddgs:
+            # Construct a powerful query
+            # (earnings OR deal OR merger) (site:cnbc.com OR site:reuters.com ...)
+            sites = " OR ".join([f"site:{s}" for s in BUSINESS_SOURCES])
+            query = f"(earnings OR acquisition OR merger OR revenue) ({sites})"
+            
+            print(f"  - Searching Business News via DDG...")
+            
+            # Get results
+            try:
+                # timelimit='d' handles the time constraint
+                results = list(ddgs.text(query, max_results=10, timelimit='d'))
+                
+                for r in results:
+                    title = r.get('title', '')
+                    body = r.get('body', '')
+                    href = r.get('href', '')
+                    
+                    # Clean title
+                    title = title.split(" - ")[0].split(" | ")[0]
+                    
+                    content = f"{title}: {body}"
+                    
+                    if len(content) > 30:
+                        topics.append({
+                            "text": content[:300] + "...",
+                            "url": href,
+                            "source": "Business News"
+                        })
+            except Exception as e:
+                print(f"    Error in business search: {e}")
+
+    except Exception as e:
+        print(f"X Monitor: Business scan error: {e}")
+
+    except Exception as e:
+        print(f"X Monitor: Business scan error: {e}")
+
+    # Deduplicate
+    seen_texts = set()
+    unique_topics = []
+    for t in topics:
+        if t['text'] not in seen_texts:
+            unique_topics.append(t)
+            seen_texts.add(t['text'])
+            
+    print(f"[{time.strftime('%H:%M:%S')}] X Monitor: Found {len(unique_topics)} BUSINESS leads.")
+    return unique_topics
+
 def get_x_topics():
     """
     Searches for recent content from legitimate X accounts to discover trending topics.
