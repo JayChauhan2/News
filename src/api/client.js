@@ -30,3 +30,16 @@ export async function fetchArticle(id) {
     const articles = await fetchArticles();
     return articles.find(a => a.id === id);
 }
+export async function fetchAgentStatus() {
+    try {
+        const response = await fetch(`${API_BASE_URL}/agent_status.json`);
+        if (!response.ok) {
+            // Fallback for when file doesn't exist yet
+            return [];
+        }
+        return await response.json();
+    } catch (error) {
+        console.error("Failed to fetch agent status:", error);
+        return [];
+    }
+}

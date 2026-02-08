@@ -2,6 +2,7 @@ import json
 import os
 import time
 from . import agent, reviewer, formatter
+from .. import status_manager
 
 DOSSIER_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), 'public', 'dossiers')
 ARTICLES_FILE = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), 'public', 'articles.json')
@@ -11,8 +12,9 @@ def publish_pending_dossiers():
     Reads processed dossiers and converts them into articles.
     Runs the full Copy Desk chain: Draft -> Review -> Format -> Publish.
     """
-    if not os.path.exists(DOSSIER_DIR):
+    if not os.path.exists(DOSSIER_DIR) or not os.listdir(DOSSIER_DIR):
         print("Writer: No dossiers found.")
+        status_manager.update_agent_status("The Senior Reporter", "Journalist", "Idle", "Waiting for new assignments...")
         return
 
     # Load existing articles
@@ -47,17 +49,21 @@ def publish_pending_dossiers():
             continue
             
         # 1. Draft
+        status_manager.update_agent_status("The Senior Reporter", "Journalist", "Drafting", f"Writing article about: {dossier.get('title', 'Unknown Topic')[:30]}...")
         draft = agent.write_article(dossier)
         if not draft:
             continue
             
         # 2. Review (Fact Check)
+        status_manager.update_agent_status("The Senior Reporter", "Journalist", "Reviewing", "Fact-checking and reviewing draft...")
         verified_draft = reviewer.review_draft(draft, dossier)
         
         # 3. Format (SEO & Images)
+        status_manager.update_agent_status("The Senior Reporter", "Journalist", "Formatting", "Optimizing for SEO and selecting images...")
         final_draft = formatter.format_article(verified_draft)
         
         # 4. Publish
+        status_manager.update_agent_status("The Senior Reporter", "Journalist", "Publishing", "Finalizing publication details...")
         final_article = {
             "id": ticket_id,
             "headline": final_draft['headline'],
@@ -82,6 +88,16 @@ def publish_pending_dossiers():
             except json.JSONDecodeError:
                 pass
         
+        # Double-check if we already have this ID (race condition protection)
+        if any(a.get('id') == ticket_id for a in current_articles):
+            print(f"Writer: Skipped duplicate '{final_draft['headline']}' (ID: {ticket_id}) - already exists.")
+            # Ensure we clean up the duplicate dossier so we don't process it again
+            try:
+                os.remove(dossier_path)
+            except:
+                pass
+            continue
+
         current_articles.insert(0, final_article)
         
         try:
@@ -111,7 +127,7 @@ def publish_pending_dossiers():
                         print(f"Writer: Removed ticket {ticket_id} from assignments.")
                 except Exception as e:
                     print(f"Writer: Failed to update assignments file: {e}")
-            
+
         except Exception as e:
             print(f"Writer: Failed to save article or remove dossier {filename}: {e}")
 

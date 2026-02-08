@@ -58,6 +58,17 @@ def get_assignments():
     }
     return JSONResponse(content=content, headers=headers)
 
+@app.get("/agent_status.json")
+def get_agent_status():
+    status_file = os.path.join(BASE_DIR, 'public', 'agent_status.json')
+    content = load_json(status_file)
+    headers = {
+        "Cache-Control": "no-cache, no-store, must-revalidate", 
+        "Pragma": "no-cache", 
+        "Expires": "0"
+    }
+    return JSONResponse(content=content, headers=headers)
+
 import threading
 import time
 from backend.writer import publisher

@@ -42,6 +42,18 @@ def get_x_topics():
             query = f"site:twitter.com/{source}"
             print(f"  - Checking @{source} via DDG...")
             
+            # Update status for granular feedback
+            try:
+                from .. import status_manager
+                status_manager.update_agent_status(
+                    "Watchtower", 
+                    "News Monitor", 
+                    "Scanning", 
+                    f"Analyzing recent tweets from @{source}..."
+                )
+            except ImportError:
+                pass # Handle extensive path issues if run directly
+            
             try:
                 # Search for recent results (past day)
                 results = list(ddgs.text(query, max_results=3, timelimit='d'))
@@ -66,10 +78,33 @@ def get_x_topics():
     # Deduplicate
     unique_topics = list(set(topics))
     print(f"[{time.strftime('%H:%M:%S')}] X Monitor: Discovered {len(unique_topics)} potential topics.")
+    
+    from .. import status_manager
+    if unique_topics:
+        status_manager.update_agent_status(
+            "Watchtower", 
+            "News Monitor", 
+            "Active", 
+            f"identified {len(unique_topics)} potential leads from X."
+        )
+    else:
+        status_manager.update_agent_status(
+            "Watchtower", 
+            "News Monitor", 
+            "Idle", 
+            "Waiting for next scan cycle..."
+        )
+        
     return unique_topics
 
 if __name__ == "__main__":
     # Test run
+    # Mocking the relative import for direct execution
+    import sys
+    import os
+    sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+    import status_manager
+    
     found = get_x_topics()
     for t in found:
         print(f"- {t}")

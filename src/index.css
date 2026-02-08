@@ -15,5 +15,9 @@
 
 /* Global Reset adjustments if needed */
 body {
-  @apply bg-white text-slate-900 antialiased;
+  @apply bg-white text-slate-900 antialiased transition-colors duration-300;
+}
+
+:root.dark body {
+  @apply bg-slate-900 text-slate-100;
 }

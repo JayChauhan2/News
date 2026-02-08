@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Clock } from 'lucide-react';
+import { formatDate } from '../utils/dateUtils';
 
 export default function ArticleCard({ article, featured = false }) {
     if (!article) return null;
@@ -27,30 +28,23 @@ export default function ArticleCard({ article, featured = false }) {
                 {/* Content */}
                 <div className={`flex flex-col ${featured ? 'md:w-1/3 py-4' : 'flex-grow'}`}>
                     <div className="flex items-center space-x-2 mb-3">
-                        <span className="text-xs font-bold text-indigo-600 uppercase tracking-wider">
+                        <Link to={`/category/${article.category}`} className="text-xs font-bold text-indigo-600 dark:text-indigo-400 uppercase tracking-wider hover:text-indigo-800 dark:hover:text-indigo-300 transition-colors">
                             {article.category}
-                        </span>
-                        <span className="text-slate-300">•</span>
-                        <span className="text-xs font-medium text-slate-500 flex items-center">
+                        </Link>
+                        <span className="text-slate-300 dark:text-slate-600">•</span>
+                        <span className="text-xs font-medium text-slate-500 dark:text-slate-400 flex items-center">
                             <Clock size={12} className="mr-1" />
-                            {new Date(article.date).toLocaleDateString()}
+                            {formatDate(article.date || article.published_at)}
                         </span>
                     </div>
 
-                    <h2 className={`${featured ? 'text-4xl' : 'text-xl'} font-bold text-slate-900 leading-tight mb-3 group-hover:text-indigo-600 transition-colors`}>
+                    <h2 className={`${featured ? 'text-4xl' : 'text-xl'} font-bold text-slate-900 dark:text-white leading-tight mb-3 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors`}>
                         {article.title || article.headline}
                     </h2>
 
-                    <p className={`text-slate-600 leading-relaxed mb-4 ${featured ? 'text-lg line-clamp-4' : 'text-sm line-clamp-3'}`}>
+                    <p className={`text-slate-600 dark:text-slate-300 leading-relaxed mb-4 ${featured ? 'text-lg line-clamp-4' : 'text-sm line-clamp-3'}`}>
                         {article.summary}
                     </p>
-
-                    <div className="mt-auto pt-4 flex items-center text-sm font-medium text-slate-900">
-                        <div className="w-6 h-6 rounded-full bg-slate-200 flex items-center justify-center text-xs font-bold mr-2 text-slate-600">
-                            {article.author?.[0] || 'A'}
-                        </div>
-                        <span>{article.author}</span>
-                    </div>
                 </div>
             </article>
         </Link>
