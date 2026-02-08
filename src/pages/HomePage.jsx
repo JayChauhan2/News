@@ -1,119 +1,122 @@
-import React, { useState, useEffect } from 'react';
+import React, { useMemo } from 'react';
 import { useParams } from 'react-router-dom';
-import NewsGrid, { LeftColumn, CenterColumn, RightColumn } from '../components/NewsGrid';
-import StoryCard from '../components/StoryCard';
+import ArticleCard from '../components/ArticleCard';
+import { useArticles } from '../api/client';
 
-const HomePage = () => {
+export default function HomePage() {
     const { category } = useParams();
-    const [articles, setArticles] = useState([]);
-    const [loading, setLoading] = useState(true);
+    const { articles, loading, error } = useArticles();
 
-    useEffect(() => {
-        const fetchArticles = () => {
-            setLoading(true);
-            fetch(`http://localhost:8000/articles?t=${Date.now()}`)
-                .then(res => res.json())
-                .then(data => {
-                    let filtered = data;
-                    if (category) {
-                        filtered = data.filter(a => {
-                            if (Array.isArray(a.category)) {
-                                return a.category.includes(category);
-                            }
-                            return a.category === category;
-                        });
-                    }
-                    setArticles(filtered);
-                    setLoading(false);
-                })
-                .catch(err => {
-                    console.error("Failed to fetch articles", err);
-                    setLoading(false);
-                });
-        };
+    const filteredArticles = useMemo(() => {
+        if (loading || error) return [];
+        if (!category) return articles;
+        return articles.filter(article =>
+            (article.category || "").toLowerCase() === category.toLowerCase()
+        );
+    }, [category, articles, loading, error]);
 
-        fetchArticles();
-        const interval = setInterval(fetchArticles, 10000);
-        return () => clearInterval(interval);
-    }, [category]);
-
-    if (loading && articles.length === 0) {
+    if (loading) {
         return (
-            <div className="min-h-[50vh] flex items-center justify-center">
-                <div className="font-sans text-xs uppercase tracking-widest text-gray-400 animate-pulse">
-                    Updating The Edition...
-                </div>
+            <div className="flex h-[50vh] items-center justify-center">
+                <div className="text-xl font-serif animate-pulse tracking-widest uppercase">Loading The Daily Agent...</div>
             </div>
         );
     }
 
-    if (articles.length === 0) {
+    if (error) {
         return (
-            <div className="min-h-[50vh] flex flex-col items-center justify-center text-center p-8">
-                <h2 className="font-headline text-3xl text-gray-400 italic mb-2">No news in {category || "this section"} yet.</h2>
-                <p className="font-sans text-xs text-gray-300 uppercase tracking-widest">The presses are running...</p>
+            <div className="flex h-[50vh] items-center justify-center">
+                <div className="text-accent font-bold font-serif">Unable to fetch the latest wire. Please check connection.</div>
             </div>
         );
     }
 
-    // Sort articles by date to ensure freshness
-    const sortedArticles = [...articles].sort((a, b) => new Date(b.published_at) - new Date(a.published_at));
-
-    // Distribution Logic
-    const leadStory = sortedArticles[0];
-    const whatsNews = sortedArticles.slice(1, 6); // Left column rapid fire
-    const centerStories = sortedArticles.slice(6, 9); // Below hero
-    const rightStories = sortedArticles.slice(9, 15); // Right column (Opinion/More)
+    // Layout Logic
+    const leadArticle = filteredArticles[0];
+    const secondaryArticles = filteredArticles.slice(1, 4); // Next 3
+    const sidebarArticles = filteredArticles.slice(4, 9); // Next 5 for sidebar
+    const moreArticles = filteredArticles.slice(9);
 
     return (
-        <NewsGrid>
-            {/* LEFT COLUMN: WHAT'S NEWS */}
-            <LeftColumn>
-                <div className="section-header">What's News</div>
-                <div className="space-y-4">
-                    {whatsNews.map(article => (
-                        <StoryCard key={article.id} article={article} variant="compact" />
-                    ))}
+        <div className="animate-fade-in pb-20">
+            {category && (
+                <div className="mb-12 border-b-2 border-black pb-4 text-center">
+                    <h1 className="text-5xl font-serif font-black capitalize tracking-tighter">{category}</h1>
                 </div>
-            </LeftColumn>
+            )}
 
-            {/* CENTER COLUMN: HERO & MAIN NEWS */}
-            <CenterColumn>
-                <div className="section-header text-center w-full border-t border-black pt-1 mb-6">
-                    {category ? `${category} News` : "Top Stories"}
+            {/* A. Lead Story Section */}
+            {leadArticle && (
+                <section className="mb-16 border-b border-black/10 pb-12">
+                    <ArticleCard article={leadArticle} variant="lead" />
+                </section>
+            )}
+
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
+                {/* B. Main Content Column (Left) */}
+                <div className="lg:col-span-8 flex flex-col gap-12">
+                    {/* B1. Secondary Row (3 columns) */}
+                    {secondaryArticles.length > 0 && (
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 border-b border-black/10 pb-12">
+                            {secondaryArticles.map(article => (
+                                <ArticleCard key={article.id} article={article} variant="standard" />
+                            ))}
+                        </div>
+                    )}
+
+                    {/* B2. More Stories (List or Grid) */}
+                    {moreArticles.length > 0 && (
+                        <div>
+                            <div className="flex items-center mb-6">
+                                <span className="bg-black text-white text-xs font-bold px-2 py-1 uppercase tracking-widest">More News</span>
+                                <div className="h-px bg-black flex-grow ml-4"></div>
+                            </div>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                                {moreArticles.map(article => (
+                                    <ArticleCard key={article.id} article={article} variant="compact" />
+                                ))}
+                            </div>
+                        </div>
+                    )}
                 </div>
 
-                {/* Hero */}
-                <StoryCard article={leadStory} variant="hero" showImage={true} />
+                {/* C. Sidebar Column (Right) - Sticky-ish */}
+                <aside className="lg:col-span-4 pl-0 lg:pl-8 lg:border-l border-black/10">
+                    <div className="sticky top-24">
+                        <div className="mb-8">
+                            <h3 className="font-serif font-bold text-xl mb-4 border-b-2 border-black pb-1">Trending</h3>
+                            <div className="flex flex-col gap-6">
+                                {sidebarArticles.map((article, index) => (
+                                    <div key={article.id} className="group cursor-pointer">
+                                        <div className="flex items-baseline space-x-3">
+                                            <span className="text-3xl font-black text-black/10 font-serif -mb-4 z-0 group-hover:text-accent/20 transition-colors">
+                                                {index + 1}
+                                            </span>
+                                            <div className="relative z-10 bg-paper pl-2">
+                                                <span className="text-[9px] font-bold text-accent uppercase tracking-widest block mb-1">
+                                                    {article.category}
+                                                </span>
+                                                <h4 className="font-serif font-bold text-lg leading-tight group-hover:text-secondary transition-colors">
+                                                    {article.title}
+                                                </h4>
+                                            </div>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
 
-                <div className="border-t border-gray-200 my-8"></div>
-
-                {/* Sub-Lead Grid */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                    {centerStories.map(article => (
-                        <StoryCard key={article.id} article={article} variant="standard" showImage={false} />
-                    ))}
-                </div>
-            </CenterColumn>
-
-            {/* RIGHT COLUMN: OPINION / MARKETS */}
-            <RightColumn>
-                <div className="section-header">Opinion & Commentary</div>
-                <div className="bg-gray-50/50 p-4 border border-gray-100 mb-6">
-                    {rightStories.slice(0, 3).map(article => (
-                        <StoryCard key={article.id} article={article} variant="opinion" showImage={true} />
-                    ))}
-                </div>
-
-                <div className="section-header mt-8">More Headlines</div>
-                <div className="space-y-4">
-                    {rightStories.slice(3).map(article => (
-                        <StoryCard key={article.id} article={article} variant="compact" />
-                    ))}
-                </div>
-            </RightColumn>
-        </NewsGrid>
+                        <div className="bg-news-gray/30 p-6 text-center border border-black/5">
+                            <h4 className="font-serif font-bold text-lg mb-2">Daily Agent Newsletter</h4>
+                            <p className="text-xs text-secondary mb-4">Get the most critical AI-curated news delivered to your inbox every morning.</p>
+                            <input type="email" placeholder="Email address" className="w-full bg-white border border-black/10 px-3 py-2 text-sm mb-2" />
+                            <button className="w-full bg-black text-white text-xs font-bold uppercase py-2 hover:bg-accent transition-colors">
+                                Subscribe
+                            </button>
+                        </div>
+                    </div>
+                </aside>
+            </div>
+        </div>
     );
-};
-
-export default HomePage;
+}

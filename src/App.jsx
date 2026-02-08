@@ -1,9 +1,8 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Layout from './components/Layout';
 import HomePage from './pages/HomePage';
-import WritersPage from './pages/WritersPage';
 import ArticlePage from './pages/ArticlePage';
-import './App.css';
+import WritersPage from './pages/WritersPage'; // Keeping this if it exists, or will create/stub it
 
 function App() {
   return (
@@ -12,8 +11,8 @@ function App() {
         <Route path="/" element={<Layout />}>
           <Route index element={<HomePage />} />
           <Route path="category/:category" element={<HomePage />} />
-          <Route path="writers" element={<WritersPage />} />
           <Route path="article/:id" element={<ArticlePage />} />
+          <Route path="writers" element={<WritersPage />} />
         </Route>
       </Routes>
     </BrowserRouter>

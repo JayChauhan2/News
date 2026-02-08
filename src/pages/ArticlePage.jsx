@@ -1,122 +1,95 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { useParams, Link } from 'react-router-dom';
-import ReactMarkdown from 'react-markdown';
+import { useArticles } from '../api/client';
+import { ArrowLeft, Clock, Share2 } from 'lucide-react';
 import { getTimeAgo } from '../utils';
 
-const ArticlePage = () => {
+export default function ArticlePage() {
     const { id } = useParams();
-    const [article, setArticle] = useState(null);
-    const [loading, setLoading] = useState(true);
+    const { articles, loading, error } = useArticles();
 
-    useEffect(() => {
-        fetch(`http://localhost:8000/articles?t=${Date.now()}`)
-            .then(res => res.json())
-            .then(data => {
-                const found = data.find(a => a.id === id);
-                setArticle(found);
-                setLoading(false);
-            })
-            .catch(err => {
-                console.error(err);
-                setLoading(false);
-            });
-    }, [id]);
+    // Find article from the fetched list
+    const article = articles.find(a => a.id === id);
 
     if (loading) {
         return (
-            <div className="min-h-[50vh] flex items-center justify-center">
-                <div className="font-sans text-xs uppercase tracking-widest text-gray-400 animate-pulse">
-                    Loading Article...
-                </div>
+            <div className="flex h-[50vh] items-center justify-center">
+                <div className="text-xl font-serif animate-pulse">Loading Article...</div>
             </div>
         );
     }
 
     if (!article) {
         return (
-            <div className="min-h-[50vh] flex flex-col items-center justify-center">
-                <div className="font-headline text-2xl text-gray-400 italic mb-4">Article not found.</div>
-                <Link to="/" className="text-xs font-sans font-bold uppercase tracking-widest hover:underline">
-                    Return to Home
-                </Link>
+            <div className="py-20 text-center">
+                <h2 className="text-3xl font-serif mb-4">Article Not Found</h2>
+                <Link to="/" className="text-accent underline">Return Home</Link>
             </div>
         );
     }
 
+    const { title, content, category, date, image, author } = article;
+
     return (
-        <article className="py-12 px-4">
-            <div className="max-w-3xl mx-auto">
-                {/* Header */}
-                <header className="mb-10 text-center">
-                    <nav className="flex justify-center items-center gap-2 text-[11px] font-sans font-bold uppercase tracking-widest text-[#0274b6] mb-6">
-                        <Link to="/" className="hover:text-black transition-colors">Home</Link>
-                        <span className="text-gray-300">/</span>
-                        <Link to={`/category/${article.category || 'Tech'}`} className="hover:text-black transition-colors">
-                            {article.category || 'Tech'}
-                        </Link>
-                    </nav>
+        <div className="max-w-4xl mx-auto animate-fade-in">
+            {/* Category & Breadcrumb */}
+            <div className="flex items-center space-x-2 text-xs font-bold tracking-widest uppercase mb-6">
+                <Link to="/" className="text-secondary hover:text-primary transition-colors">Home</Link>
+                <span className="text-secondary">/</span>
+                <Link to={`/category/${(category || "general").toLowerCase()}`} className="text-accent">{category}</Link>
+            </div>
 
-                    <h1 className="font-headline text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-6 text-black">
-                        {article.headline}
-                    </h1>
+            {/* Headings */}
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-serif font-bold leading-tight mb-6">
+                {title}
+            </h1>
 
-                    <div className="flex flex-col items-center justify-center border-y border-gray-100 py-4">
-                        <div className="font-sans text-xs font-bold uppercase tracking-wider text-gray-900 mb-1">
-                            By {article.author || "The Daily Agent Staff"}
-                        </div>
-                        <div className="font-sans text-[10px] uppercase tracking-wider text-gray-500">
-                            {getTimeAgo(article.published_at)} • 2 Min Read
+            <div className="flex items-center justify-between border-t border-b border-black/10 py-4 mb-8">
+                <div className="flex items-center space-x-4">
+                    <div className="w-10 h-10 rounded-full bg-secondary/20 flex items-center justify-center text-secondary font-bold">
+                        {author ? author.charAt(0) : "A"}
+                    </div>
+                    <div>
+                        <p className="font-bold text-sm text-primary">By {author || "Daily Agent"}</p>
+                        <div className="flex items-center text-xs text-secondary space-x-2">
+                            <Clock size={12} />
+                            <span>{getTimeAgo(date)}</span>
                         </div>
                     </div>
-                </header>
-
-                {/* Hero Image */}
-                {article.image_url && (
-                    <figure className="mb-12">
-                        <div className="w-full max-h-[500px] overflow-hidden border border-gray-100 bg-gray-50">
-                            <img
-                                src={article.image_url}
-                                alt={article.headline}
-                                className="w-full h-full object-cover"
-                            />
-                        </div>
-                        {article.image_prompt && (
-                            <figcaption className="mt-2 text-right text-[10px] text-gray-400 font-sans uppercase tracking-wider">
-                                AI Generated Image • Prompt: {article.image_prompt.substring(0, 50)}...
-                            </figcaption>
-                        )}
-                    </figure>
-                )}
-
-                {/* Content */}
-                <div className="prose prose-lg max-w-none 
-                    prose-headings:font-headline prose-headings:font-bold prose-headings:text-black 
-                    prose-p:font-body prose-p:text-gray-800 prose-p:text-[1.125rem] prose-p:leading-[1.8]
-                    prose-a:text-[#0274b6] prose-a:no-underline hover:prose-a:underline
-                    prose-blockquote:border-l-[3px] prose-blockquote:border-black prose-blockquote:pl-6 prose-blockquote:py-2 prose-blockquote:italic prose-blockquote:font-headline prose-blockquote:text-xl prose-blockquote:text-gray-900 prose-blockquote:bg-gray-50
-                    first-letter:float-left first-letter:text-[5rem] first-letter:pr-4 first-letter:font-bold first-letter:font-headline first-letter:text-black first-letter:leading-[4rem] first-letter:mt-[-0.5rem]">
-                    <ReactMarkdown
-                        components={{
-                            h1: ({ node, ...props }) => <h2 className="text-3xl mt-12 mb-6" {...props} />,
-                            h2: ({ node, ...props }) => <h2 className="text-2xl mt-10 mb-4" {...props} />,
-                            h3: ({ node, ...props }) => <h3 className="text-lg mt-8 mb-3 uppercase tracking-wider font-sans font-bold border-b border-gray-200 pb-1" {...props} />,
-                            li: ({ node, ...props }) => <li className="pl-1 marker:text-gray-300" {...props} />,
-                        }}
-                    >
-                        {article.content}
-                    </ReactMarkdown>
                 </div>
-
-                {/* Footer Navigation */}
-                <div className="mt-16 pt-8 border-t border-black flex justify-center">
-                    <Link to="/" className="group flex items-center gap-2 text-xs font-sans font-bold uppercase tracking-widest text-gray-400 hover:text-black transition-colors">
-                        <span>&larr;</span>
-                        <span className="group-hover:translate-x-1 transition-transform">Return to Front Page</span>
-                    </Link>
+                <div className="flex space-x-2">
+                    <button className="p-2 hover:bg-black/5 rounded-full transition-colors">
+                        <Share2 size={18} className="text-secondary" />
+                    </button>
                 </div>
             </div>
-        </article>
-    );
-};
 
-export default ArticlePage;
+            {/* Main Image */}
+            {image && (
+                <div className="mb-10 h-[40vh] max-h-[400px] relative overflow-hidden bg-gray-100">
+                    <img src={image} alt={title} className="w-full h-full object-cover" />
+                </div>
+            )}
+
+            {/* Content */}
+            <div className="max-w-2xl mx-auto prose prose-lg prose-headings:font-serif prose-headings:font-bold prose-p:font-sans prose-p:leading-relaxed prose-a:text-accent hover:prose-a:text-primary">
+                {/* If content is HTML, render it. If it's plain text, wrap in p tags */}
+                {content && (content.includes('<') ? (
+                    <div dangerouslySetInnerHTML={{ __html: content }} />
+                ) : (
+                    content.split('\n\n').map((paragraph, index) => (
+                        <p key={index}>{paragraph}</p>
+                    ))
+                ))}
+            </div>
+
+            {/* Footer Navigation */}
+            <div className="mt-16 pt-8 border-t border-black/10 flex justify-between">
+                <Link to="/" className="flex items-center font-bold text-primary hover:text-accent transition-colors">
+                    <ArrowLeft size={16} className="mr-2" />
+                    Back to Top Stories
+                </Link>
+            </div>
+        </div>
+    );
+}

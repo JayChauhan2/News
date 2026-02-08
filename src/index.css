@@ -1,138 +1,47 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* Import WSJ-style fonts */
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,900;1,400;1,700&family=Retina:wght@400&family=Lato:wght@400;700&display=swap');
+@layer base {
+  body {
+    @apply bg-paper text-primary font-serif antialiased;
+    background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+  }
 
-:root {
-  /* Typography */
-  --font-headline: "Playfair Display", "Georgia", "Times New Roman", serif;
-  --font-body: "Escrow", "Georgia", "Times New Roman", serif;
-  /* Fallback to Playfair/Georgia if Escrow unavailable */
-  --font-sans: "Retina", "Lato", "Arial", sans-serif;
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply font-serif font-bold text-primary tracking-tight;
+  }
 
-  /* Colors */
-  --color-black: #1a1a1a;
-  --color-gray-dark: #333333;
-  --color-gray-med: #666666;
-  --color-gray-light: #e2e2e2;
-  --color-bg: #ffffff;
-  --color-accent: #0274b6;
-  /* WSJ Blue */
-  --color-border: #e2e2e2;
-  --color-paper: #fcfbf7;
-  /* Very subtle paper tint for special sections */
+  /* Utility to make sans-serif text default for body copy if needed, 
+     but keeping serif as base for that 'newspaper' feel, 
+     with specific overrides for UI elements */
+
+  p,
+  a,
+  span,
+  div,
+  li,
+  button,
+  input,
+  label {
+    @apply font-sans;
+  }
+
+  /* Article specific overrides */
+  article p {
+    @apply font-serif text-lg leading-relaxed;
+  }
 }
 
-body {
-  margin: 0;
-  padding: 0;
-  font-family: var(--font-body);
-  background-color: var(--color-bg);
-  color: var(--color-black);
-  -webkit-font-smoothing: antialiased;
-  line-height: 1.5;
-}
-
-/* Headings */
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-  font-family: var(--font-headline);
-  font-weight: 700;
-  margin: 0;
-  line-height: 1.1;
-  color: var(--color-black);
-}
-
-a {
-  text-decoration: none;
-  color: inherit;
-  transition: color 0.2s;
-}
-
-a:hover {
-  color: var(--color-accent);
-}
-
-/* Utilities */
-.font-headline {
-  font-family: var(--font-headline);
-}
-
-.font-body {
-  font-family: var(--font-body);
-}
-
-.font-sans {
-  font-family: var(--font-sans);
-}
-
-.border-b {
-  border-bottom: 1px solid var(--color-border);
-}
-
-.border-t {
-  border-top: 1px solid var(--color-border);
-}
-
-.border-l {
-  border-left: 1px solid var(--color-border);
-}
-
-.border-r {
-  border-right: 1px solid var(--color-border);
-}
-
-.container {
-  max-width: 1280px;
-  /* Wider for 3-col layout */
-  margin: 0 auto;
-  padding: 0 20px;
-}
-
-/* WSJ-specific styles */
-.section-header {
-  font-family: var(--font-sans);
-  font-size: 0.75rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: #333;
-  border-top: 1px solid #000;
-  border-bottom: 1px solid var(--color-border);
-  padding: 6px 0;
-  margin-bottom: 16px;
-}
-
-.timestamp {
-  font-family: var(--font-sans);
-  font-size: 0.7rem;
-  color: var(--color-gray-med);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-}
-
-.kicker {
-  font-family: var(--font-sans);
-  font-size: 0.75rem;
-  font-weight: 700;
-  color: var(--color-accent);
-  text-transform: uppercase;
-  margin-bottom: 4px;
-  display: block;
-}
-
-/* Scrollbar hiding */
-.no-scrollbar::-webkit-scrollbar {
-  display: none;
-}
-
-.no-scrollbar {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
 }
