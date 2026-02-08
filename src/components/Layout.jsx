@@ -1,14 +1,13 @@
 import React from 'react';
 import Header from './Header';
 import Footer from './Footer';
-import { Outlet } from 'react-router-dom';
 
-export default function Layout() {
+export default function Layout({ children }) {
     return (
-        <div className="min-h-screen flex flex-col bg-paper">
+        <div className="min-h-screen flex flex-col bg-white text-slate-900 font-sans">
             <Header />
-            <main className="flex-grow container mx-auto px-4 md:px-8 py-8 max-w-7xl">
-                <Outlet />
+            <main className="flex-grow container mx-auto px-4 max-w-7xl">
+                {children}
             </main>
             <Footer />
         </div>

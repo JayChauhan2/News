@@ -1,21 +1,21 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Layout from './components/Layout';
 import HomePage from './pages/HomePage';
 import ArticlePage from './pages/ArticlePage';
-import WritersPage from './pages/WritersPage'; // Keeping this if it exists, or will create/stub it
+import WritersPage from './pages/WritersPage';
 
 function App() {
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<Layout />}>
-          <Route index element={<HomePage />} />
-          <Route path="category/:category" element={<HomePage />} />
-          <Route path="article/:id" element={<ArticlePage />} />
-          <Route path="writers" element={<WritersPage />} />
-        </Route>
-      </Routes>
-    </BrowserRouter>
+    <Router>
+      <Layout>
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/article/:id" element={<ArticlePage />} />
+          <Route path="/writers" element={<WritersPage />} />
+        </Routes>
+      </Layout>
+    </Router>
   );
 }
 
