@@ -9,5 +9,16 @@
     "cluster_size": 1,
     "category": "World",
     "created_at": "2026-02-08 12:50:25"
+  },
+  {
+    "id": "1770573397_3",
+    "status": "pending",
+    "score": 8.0,
+    "reasoning": "The news story is about Twitter and CNN, which are both major players in the tech industry. The impact is high because it involves a major news organization and a popular social media platform. The novelty is also high because it is a new development in the tech industry. The relevance is high because it is related to tech and AI, as Twitter and CNN are both heavily involved in these areas.",
+    "title": "twitter.com/cnn It\u2019s our job to #GoThere and tell the most difficult stories. For breaking news, fol",
+    "source_link": "https://twitter.com/cnn",
+    "cluster_size": 2,
+    "category": "Business",
+    "created_at": "2026-02-08 12:56:37"
   }
 ]

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Clock } from 'lucide-react';
-import { formatDate } from '../utils/dateUtils';
+import { formatDate, formatRelativeTime } from '../utils/dateUtils';
 
 export default function ArticleCard({ article, featured = false }) {
     if (!article) return null;
@@ -34,7 +34,7 @@ export default function ArticleCard({ article, featured = false }) {
                         <span className="text-slate-300 dark:text-slate-600">•</span>
                         <span className="text-xs font-medium text-slate-500 dark:text-slate-400 flex items-center">
                             <Clock size={12} className="mr-1" />
-                            {formatDate(article.date || article.published_at)}
+                            {formatRelativeTime(article.date || article.published_at)}
                         </span>
                     </div>
 

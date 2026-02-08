@@ -2,6 +2,37 @@ import React, { useState, useEffect } from 'react';
 import { fetchAgentStatus } from '../api/client';
 import { Activity, Radio, Cpu, RefreshCw } from 'lucide-react';
 
+// Map of agent names to their specific emojis
+const AGENT_EMOJIS = {
+    'Watchtower': '🗼',
+    'Chief Editor': '📰',
+    'Trend Spotter': '📈',
+    'Investigative Journalist': '🕵️',
+    'Opinion Columnist': '✒️',
+    'Fact Checker': '✅',
+    'Market Analyst': '📊',
+    'Tech Reporter': '💻',
+    'Sports Correspondent': '🏆',
+    'Entertainment Critic': '🎬',
+    'Political Pundit': '🏛️',
+    'Science Editor': '🔬'
+};
+
+const getAgentEmoji = (name, role) => {
+    // Try exact name match
+    if (AGENT_EMOJIS[name]) return AGENT_EMOJIS[name];
+
+    // Try to match based on role keywords if name doesn't match
+    const lowerRole = (role || '').toLowerCase();
+    if (lowerRole.includes('editor')) return '📝';
+    if (lowerRole.includes('journalist') || lowerRole.includes('writer')) return '✍️';
+    if (lowerRole.includes('analyst')) return '📉';
+    if (lowerRole.includes('monitor')) return '👀';
+
+    // Default fallback
+    return '🤖';
+};
+
 export default function WritersPage() {
     const [writers, setWriters] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -42,8 +73,8 @@ export default function WritersPage() {
                             )}
 
                             <div className="flex items-center space-x-4 mb-6 relative z-10">
-                                <div className={`w-14 h-14 rounded-full flex items-center justify-center font-bold text-xl border-2 ${writer.status === 'Idle' ? 'bg-slate-50 dark:bg-slate-700 border-slate-200 dark:border-slate-600 text-slate-400 dark:text-slate-500' : 'bg-indigo-50 dark:bg-indigo-900/50 border-indigo-100 dark:border-indigo-800 text-indigo-600 dark:text-indigo-400'}`}>
-                                    {writer.name ? writer.name[0] : 'A'}
+                                <div className={`w-14 h-14 rounded-full flex items-center justify-center font-bold text-3xl border-2 ${writer.status === 'Idle' ? 'bg-slate-50 dark:bg-slate-700 border-slate-200 dark:border-slate-600 grayscale' : 'bg-indigo-50 dark:bg-indigo-900/50 border-indigo-100 dark:border-indigo-800'}`}>
+                                    {getAgentEmoji(writer.name, writer.role)}
                                 </div>
                                 <div>
                                     <h3 className="text-lg font-bold text-slate-900 dark:text-white leading-tight">{writer.name || 'Unknown Agent'}</h3>
@@ -67,10 +98,10 @@ export default function WritersPage() {
 
                                 <div className="pt-4 border-t border-slate-50 dark:border-slate-700 flex items-center justify-between">
                                     <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold uppercase tracking-wide ${writer.status === 'Idle'
-                                            ? 'bg-slate-100 dark:bg-slate-700 text-slate-500 dark:text-slate-400'
-                                            : writer.status === 'Active'
-                                                ? 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400'
-                                                : 'bg-indigo-100 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-400'
+                                        ? 'bg-slate-100 dark:bg-slate-700 text-slate-500 dark:text-slate-400'
+                                        : writer.status === 'Active'
+                                            ? 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400'
+                                            : 'bg-indigo-100 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-400'
                                         }`}>
                                         {writer.status === 'Active' && <span className="w-1.5 h-1.5 rounded-full bg-green-500 mr-1.5 animate-pulse"></span>}
                                         {writer.status}
