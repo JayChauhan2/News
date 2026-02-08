@@ -36,7 +36,7 @@ export default function ArticlePage() {
                     {article.category}
                 </span>
                 <h1 className="text-4xl md:text-5xl font-extrabold text-slate-900 mb-6 leading-tight">
-                    {article.title}
+                    {article.title || article.headline}
                 </h1>
 
                 <div className="flex items-center justify-center space-x-6 text-slate-500 text-sm font-medium">
@@ -52,11 +52,11 @@ export default function ArticlePage() {
             </header>
 
             {/* Hero Image */}
-            {article.image && (
+            {(article.image || article.image_url) && (
                 <figure className="mb-12 rounded-2xl overflow-hidden shadow-lg">
                     <img
-                        src={article.image}
-                        alt={article.title}
+                        src={article.image || article.image_url}
+                        alt={article.title || article.headline}
                         className="w-full h-auto object-cover"
                     />
                     {article.image_caption && (

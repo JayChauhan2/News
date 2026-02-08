@@ -11,10 +11,10 @@ export default function ArticleCard({ article, featured = false }) {
 
                 {/* Image Container */}
                 <div className={`overflow-hidden rounded-2xl bg-slate-100 ${featured ? 'md:w-2/3 md:h-96' : 'h-56 mb-4'}`}>
-                    {article.image ? (
+                    {article.image || article.image_url ? (
                         <img
-                            src={article.image}
-                            alt={article.title}
+                            src={article.image || article.image_url}
+                            alt={article.title || article.headline}
                             className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500"
                         />
                     ) : (
@@ -38,7 +38,7 @@ export default function ArticleCard({ article, featured = false }) {
                     </div>
 
                     <h2 className={`${featured ? 'text-4xl' : 'text-xl'} font-bold text-slate-900 leading-tight mb-3 group-hover:text-indigo-600 transition-colors`}>
-                        {article.title}
+                        {article.title || article.headline}
                     </h2>
 
                     <p className={`text-slate-600 leading-relaxed mb-4 ${featured ? 'text-lg line-clamp-4' : 'text-sm line-clamp-3'}`}>
