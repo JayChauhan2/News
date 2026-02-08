@@ -9,6 +9,8 @@ def create_ssl_context():
     context = ssl.create_default_context(cafile=certifi.where())
     return context
 
+from .memory_manager import MemoryManager
+
 # Override default SSL context creation
 ssl._create_default_https_context = create_ssl_context
 
@@ -39,10 +41,13 @@ def get_business_signals():
             
             print(f"  - Searching Business News via DDG...")
             
-            # Get results
+            # Initialize Memory
+            memory = MemoryManager()
+            
+            # Get results - Increased max_results to find new content if recent items are seen
             try:
                 # timelimit='d' handles the time constraint
-                results = list(ddgs.text(query, max_results=10, timelimit='d'))
+                results = list(ddgs.text(query, max_results=25, timelimit='d'))
                 
                 for r in results:
                     title = r.get('title', '')
@@ -55,11 +60,17 @@ def get_business_signals():
                     content = f"{title}: {body}"
                     
                     if len(content) > 30:
-                        topics.append({
-                            "text": content[:300] + "...",
-                            "url": href,
-                            "source": "Business News"
-                        })
+                        # MEMORY CHECK
+                        if not memory.is_seen(href, title):
+                            topics.append({
+                                "text": content[:300] + "...",
+                                "url": href,
+                                "source": "Business News"
+                            })
+                            memory.add(href, title)
+                        else:
+                            # print(f"    - Skipping known business topic: {title[:30]}...")
+                            pass
             except Exception as e:
                 print(f"    Error in business search: {e}")
 
@@ -88,27 +99,39 @@ def get_x_topics():
     topics = []
     print(f"[{time.strftime('%H:%M:%S')}] X Monitor: Scanning top sources...")
     
-    try:
-        # Pass verify=False to bypass SSL errors, add timeout
-        with DDGS(verify=False, timeout=20) as ddgs:
-            # Shuffle sources to vary the "feed" each time
-            selected_sources = random.sample(LEGIT_SOURCES, k=5)
+    # Initialize Memory
+    memory = MemoryManager()
+    
+    unique_topics = []
+    attempts = 0
+    max_attempts = 3
+    
+    while attempts < max_attempts and len(unique_topics) == 0:
+        attempts += 1
+        if attempts > 1:
+            print(f"[{time.strftime('%H:%M:%S')}] X Monitor: Attempt {attempts}/{max_attempts} - Retrying with different sources...")
             
-            for source in selected_sources:
-                query = f"site:twitter.com/{source}"
-                print(f"  - Checking @{source} via DDG...")
+        try:
+            # Pass verify=False to bypass SSL errors, add timeout
+            with DDGS(verify=False, timeout=20) as ddgs:
+                # Shuffle sources to vary the "feed" each time
+                selected_sources = random.sample(LEGIT_SOURCES, k=5)
                 
-                # Update status for granular feedback
-                try:
-                    from .. import status_manager
-                    status_manager.update_agent_status(
-                        "The Watchtower", 
-                        "News Monitor", 
-                        "Scanning", 
-                        f"Analyzing recent tweets from @{source}..."
-                    )
-                except ImportError:
-                    pass 
+                for source in selected_sources:
+                    query = f"site:twitter.com/{source}"
+                    print(f"  - Checking @{source} via DDG...")
+                    
+                    # Update status for granular feedback
+                    try:
+                        from .. import status_manager
+                        status_manager.update_agent_status(
+                            "The Watchtower", 
+                            "News Monitor", 
+                            "Scanning", 
+                            f"Analyzing recent tweets from @{source}..."
+                        )
+                    except ImportError:
+                        pass 
                 
                 try:
                     # Try with daily limit first
@@ -134,11 +157,17 @@ def get_x_topics():
                         content = content.replace(" on Twitter", "").replace(" on X", "")
                         
                         if len(content) > 30:
-                            topics.append({
-                                "text": content[:200] + "...",
-                                "url": href,
-                                "source": f"X (@{source})"
-                            })
+                            # MEMORY CHECK
+                            if not memory.is_seen(href, title):
+                                topics.append({
+                                    "text": content[:200] + "...",
+                                    "url": href,
+                                    "source": f"X (@{source})"
+                                })
+                                # Add to memory immediately to prevent duplicates in same batch
+                                memory.add(href, title)
+                            else:
+                                print(f"    - Skipping known topic: {title[:30]}...")
                             
                 except Exception as e:
                     if "No results" in str(e):
@@ -146,16 +175,24 @@ def get_x_topics():
                     else:
                         print(f"    Error checking {source}: {e}")
                     
-    except Exception as e:
-        print(f"X Monitor: Critical error initializing DDG: {e}")
-                
-    # Deduplicate by text content (simple)
-    seen_texts = set()
-    unique_topics = []
-    for t in topics:
-        if t['text'] not in seen_texts:
-            unique_topics.append(t)
-            seen_texts.add(t['text'])
+        except Exception as e:
+            print(f"X Monitor: Critical error initializing DDG: {e}")
+            
+        # Deduplicate within this batch (though memory check handles most)
+        seen_texts = set()
+        for t in topics:
+            if t['text'] not in seen_texts:
+                unique_topics.append(t)
+                seen_texts.add(t['text'])
+        
+        # If we found topics, break the retry loop
+        if unique_topics:
+            break
+            
+        # If no topics found, loop will continue to next attempt with new random sources
+        print(f"  - No new topics found in this batch. Retrying...")
+                    
+    # End of Retry Loop
             
     print(f"[{time.strftime('%H:%M:%S')}] X Monitor: Discovered {len(unique_topics)} potential topics.")
     

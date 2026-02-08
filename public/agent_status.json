@@ -3,28 +3,28 @@
     "name": "The Watchtower",
     "role": "News Monitor",
     "status": "Filtering",
-    "current_assignment": "Filtering 5 articles in Startups...",
-    "last_updated": "2026-02-08T16:08:41.125269"
+    "current_assignment": "Filtering 2 articles in World...",
+    "last_updated": "2026-02-08T16:30:54.461550"
   },
   {
     "name": "The Chief Editor",
     "role": "Editor-in-Chief",
     "status": "Assigning",
     "current_assignment": "Reviewing scored stories for assignment...",
-    "last_updated": "2026-02-08T16:09:17.503549"
+    "last_updated": "2026-02-08T16:31:11.047795"
   },
   {
     "name": "The Investigative Journalist",
     "role": "Journalist",
     "status": "Thinking",
     "current_assignment": "Formulating investigation strategy...",
-    "last_updated": "2026-02-08T16:13:59.897398"
+    "last_updated": "2026-02-08T16:31:14.954122"
   },
   {
     "name": "The Senior Reporter",
     "role": "Journalist",
     "status": "Idle",
     "current_assignment": "Waiting for new assignments...",
-    "last_updated": "2026-02-08T16:14:52.058279"
+    "last_updated": "2026-02-08T16:31:58.063530"
   }
 ]
