@@ -7,8 +7,12 @@ def review_draft(draft, dossier):
     """
     facts_text = "\n".join(dossier.get('key_facts', []))
     
+    import time
+    today = time.strftime('%Y-%m-%d')
+    
     prompt = f"""
     You are the Fact Checker for a news outlet.
+    Today's date is {today}.
     Your job is to compare the Draft Article against the Verified Facts.
     
     Verified Facts:

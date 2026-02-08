@@ -1,0 +1,37 @@
+[
+  {
+    "name": "The Watchtower",
+    "role": "News Monitor",
+    "status": "Idle",
+    "current_assignment": "Waiting for next scan cycle...",
+    "last_updated": "2026-02-08T09:56:46.042300"
+  },
+  {
+    "name": "Watchtower",
+    "role": "News Monitor",
+    "status": "Scanning",
+    "current_assignment": "Analyzing recent tweets from @TechCrunch...",
+    "last_updated": "2026-02-07T21:50:58.060857"
+  },
+  {
+    "name": "The Chief Editor",
+    "role": "Editor-in-Chief",
+    "status": "Assigning",
+    "current_assignment": "Reviewing scored stories for assignment...",
+    "last_updated": "2026-02-08T09:56:35.137862"
+  },
+  {
+    "name": "The Investigative Journalist",
+    "role": "Journalist",
+    "status": "Idle",
+    "current_assignment": "Waiting for assignments...",
+    "last_updated": "2026-02-08T09:56:35.138947"
+  },
+  {
+    "name": "The Senior Reporter",
+    "role": "Journalist",
+    "status": "Idle",
+    "current_assignment": "Waiting for new assignments...",
+    "last_updated": "2026-02-08T09:56:46.796535"
+  }
+]

@@ -21,8 +21,10 @@ def get_trend_queries(category="Tech"):
         signals_text = "No social signals available."
     
     # 2. Feed to LLM
+    today = time.strftime('%Y-%m-%d')
     system_prompt = f"""
     You are an Editor-in-Chief for a major news outlet. 
+    Today's date is {today}.
     Your goal is to discover breaking news for the category: {category.upper()}.
     
     Output a JSON object with a key "queries" containing a list of 5 distinct, specific search queries.
@@ -34,6 +36,13 @@ def get_trend_queries(category="Tech"):
     - Do NOT ask for generic topics like "News" or "{category}".
     
     Be specific, e.g., if category is "World", ask for "UN Security Council vote"; if "Sports", ask for "NBA Trade Deadline results".
+    
+    SPECIAL INSTRUCTION FOR "STARTUPS":
+    If the category is "Startups", specifically look for:
+    - "New AI startup launch"
+    - "Series A/B funding news"
+    - "Y Combinator monitor"
+    - "Product Hunt top launches today"
     """
     
     user_prompt = f"""

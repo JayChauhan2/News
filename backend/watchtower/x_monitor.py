@@ -46,7 +46,7 @@ def get_x_topics():
             try:
                 from .. import status_manager
                 status_manager.update_agent_status(
-                    "Watchtower", 
+                    "The Watchtower", 
                     "News Monitor", 
                     "Scanning", 
                     f"Analyzing recent tweets from @{source}..."
@@ -82,14 +82,14 @@ def get_x_topics():
     from .. import status_manager
     if unique_topics:
         status_manager.update_agent_status(
-            "Watchtower", 
+            "The Watchtower", 
             "News Monitor", 
             "Active", 
             f"identified {len(unique_topics)} potential leads from X."
         )
     else:
         status_manager.update_agent_status(
-            "Watchtower", 
+            "The Watchtower", 
             "News Monitor", 
             "Idle", 
             "Waiting for next scan cycle..."

@@ -15,8 +15,11 @@ def write_article(dossier, style="WITTY"):
     facts_text = "\n".join(dossier.get('key_facts', []))
     search_summary = json.dumps(dossier.get('search_results', []), indent=2)
     
+    current_date = datetime.datetime.now().strftime('%A, %B %d, %Y')
+    
     user_prompt = f"""
     Here is the Research Dossier. Use these facts to write the article.
+    Current Date: {current_date}
     Do NOT make up facts not present here.
     
     Title: {dossier['title']}

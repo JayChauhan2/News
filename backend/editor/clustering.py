@@ -1,6 +1,7 @@
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 import numpy as np
+from backend import status_manager
 
 def deduplicate_news(articles, similarity_threshold=0.85):
     """
@@ -9,6 +10,8 @@ def deduplicate_news(articles, similarity_threshold=0.85):
     """
     if not articles:
         return []
+        
+    status_manager.update_agent_status("The Chief Editor", "Editor-in-Chief", "Clustering", f"Grouping {len(articles)} articles by topic...")
 
     # 1. Prepare texts for vectorization
     # We combine title + summary for better matching

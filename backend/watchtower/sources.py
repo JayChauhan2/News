@@ -13,58 +13,35 @@ CATEGORY_FEEDS = {
         "https://feeds.bbci.co.uk/news/world/rss.xml",
         "http://feeds.reuters.com/reuters/worldNews"
     ],
-    "Business": [
-        "https://rss.nytimes.com/services/xml/rss/nyt/Business.xml",
-        "http://feeds.reuters.com/reuters/businessNews"
-    ],
-    "U.S.": [
-        "https://rss.nytimes.com/services/xml/rss/nyt/US.xml",
-        "http://feeds.reuters.com/reuters/domesticNews"
-    ],
     "Politics": [
         "https://rss.nytimes.com/services/xml/rss/nyt/Politics.xml",
         "http://feeds.reuters.com/reuters/politicsNews"
     ],
-    "Economy": [
-        "https://rss.nytimes.com/services/xml/rss/nyt/Economy.xml" 
+    "Business": [
+        "https://rss.nytimes.com/services/xml/rss/nyt/Business.xml",
+        "http://feeds.reuters.com/reuters/businessNews",
+        "https://feeds.bloomberg.com/markets/news.xml",
+        "https://search.cnbc.com/rs/search/combinedcms/view.xml?partnerId=wrss01&id=10000664",
+        "https://rss.nytimes.com/services/xml/rss/nyt/Economy.xml"
     ],
     "Tech": [
         "https://www.technologyreview.com/feed/",
         "https://techcrunch.com/feed/",
         "https://rss.nytimes.com/services/xml/rss/nyt/Technology.xml"
     ],
-    "Markets & Finance": [
-        "https://feeds.bloomberg.com/markets/news.xml",
-        "https://search.cnbc.com/rs/search/combinedcms/view.xml?partnerId=wrss01&id=10000664"
+    "Startups": [
+        "https://news.ycombinator.com/rss",
+        "https://techcrunch.com/category/startups/feed/",
+        "https://venturebeat.com/category/entrepreneur/feed/",
+        "https://blog.ycombinator.com/feed/"
+    ],
+    "Science": [
+        "https://rss.nytimes.com/services/xml/rss/nyt/Science.xml",
+        "https://www.sciencedaily.com/rss/all.xml",
+        "https://www.wired.com/feed/category/science/latest/rss"
     ],
     "Opinion": [
         "https://rss.nytimes.com/services/xml/rss/nyt/Opinion.xml"
-    ],
-    "Free Expression": [
-        "https://www.aclu.org/feed/rss", # Proxy for Free Expression/Civil Liberties
-    ],
-    "Arts": [
-        "https://rss.nytimes.com/services/xml/rss/nyt/Arts.xml"
-    ],
-    "Lifestyle": [
-        "https://rss.nytimes.com/services/xml/rss/nyt/FashionandStyle.xml"
-    ],
-    "Real Estate": [
-        "https://rss.nytimes.com/services/xml/rss/nyt/RealEstate.xml"
-    ],
-    "Personal Finance": [
-        "https://rss.nytimes.com/services/xml/rss/nyt/YourMoney.xml"
-    ],
-    "Health": [
-        "https://rss.nytimes.com/services/xml/rss/nyt/Health.xml",
-        "http://feeds.reuters.com/reuters/healthNews"
-    ],
-    "Style": [
-        "https://rss.nytimes.com/services/xml/rss/nyt/FashionandStyle.xml"
-    ],
-    "Sports": [
-        "https://rss.nytimes.com/services/xml/rss/nyt/Sports.xml",
-        "https://www.espn.com/espn/rss/news"
     ]
 }
 

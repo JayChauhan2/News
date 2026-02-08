@@ -2,6 +2,7 @@ import json
 import os
 import time
 from . import search, scraper, memory
+from backend import status_manager
 
 ASSIGNMENTS_FILE = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), 'public', 'assignments.json')
 DOSSIER_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), 'public', 'dossiers')
@@ -19,6 +20,9 @@ def process_assignments():
         
     os.makedirs(DOSSIER_DIR, exist_ok=True)
     
+    if not tickets:
+        status_manager.update_agent_status("The Investigative Journalist", "Journalist", "Idle", "Waiting for assignments...")
+    
     for ticket in tickets:
         ticket_id = ticket.get('id')
         dossier_path = os.path.join(DOSSIER_DIR, f"{ticket_id}.json")
@@ -28,6 +32,7 @@ def process_assignments():
             continue
             
         print(f"\nJournalist: Working on Assignment '{ticket['title']}'...")
+        status_manager.update_agent_status("The Investigative Journalist", "Journalist", "Researching", f"Investigating: {ticket['title'][:40]}...")
         
         # 1. Search Tavily
         query = f"{ticket['title']} latest news details"

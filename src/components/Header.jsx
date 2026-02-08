@@ -30,7 +30,7 @@ export default function Header() {
 
                 {/* Center: Navigation (Desktop) */}
                 <nav className="hidden md:flex items-center space-x-8 text-sm font-medium text-slate-600 dark:text-slate-400">
-                    {['World', 'Politics', 'Business', 'Tech', 'Science', 'Opinion'].map((item) => (
+                    {['World', 'Politics', 'Business', 'Tech', 'Startups', 'Science', 'Opinion'].map((item) => (
                         <Link
                             key={item}
                             to={`/category/${item.toLowerCase()}`}

@@ -1,6 +1,7 @@
 import json
 import os
 import time
+from backend import status_manager
 
 ASSIGNMENTS_FILE = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), 'public', 'assignments.json')
 ARTICLES_FILE = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), 'public', 'articles.json')
@@ -12,6 +13,8 @@ def create_assignments(scored_clusters):
     Saves to public/assignments.json.
     """
     new_tickets = []
+    
+    status_manager.update_agent_status("The Chief Editor", "Editor-in-Chief", "Assigning", "Reviewing scored stories for assignment...")
     
     for cluster, score_data in scored_clusters:
         if score_data['score'] >= 5:
