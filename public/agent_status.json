@@ -3,28 +3,28 @@
     "name": "The Watchtower",
     "role": "News Monitor",
     "status": "Filtering",
-    "current_assignment": "Filtering 40 articles in Tech...",
-    "last_updated": "2026-02-08T11:29:51.843316"
+    "current_assignment": "Filtering 40 articles in Business...",
+    "last_updated": "2026-02-08T11:58:06.128655"
   },
   {
     "name": "The Chief Editor",
     "role": "Editor-in-Chief",
     "status": "Assigning",
     "current_assignment": "Reviewing scored stories for assignment...",
-    "last_updated": "2026-02-08T11:30:25.422048"
+    "last_updated": "2026-02-08T11:58:41.919886"
   },
   {
     "name": "The Investigative Journalist",
     "role": "Journalist",
     "status": "Investigating",
-    "current_assignment": "Interrogating lead: An experimental surgery is helping cance...",
-    "last_updated": "2026-02-08T11:33:11.875149"
+    "current_assignment": "Interrogating lead: Can AI Chatbots Write Emotionally Rich R...",
+    "last_updated": "2026-02-08T11:58:47.859956"
   },
   {
     "name": "The Senior Reporter",
     "role": "Journalist",
-    "status": "Reviewing",
-    "current_assignment": "Fact-checking and reviewing draft...",
-    "last_updated": "2026-02-08T11:34:28.166772"
+    "status": "Idle",
+    "current_assignment": "Waiting for new assignments...",
+    "last_updated": "2026-02-08T11:59:53.004941"
   }
 ]

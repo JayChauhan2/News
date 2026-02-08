@@ -117,6 +117,16 @@ def process_assignments():
                 if fu_content:
                     facts.append(f"Follow-up Context ({fu_url}): {fu_content[:500]}...")
 
+        # --- Step 5.5: Image Search ---
+        print(f"Journalist: Searching for images for '{ticket['title']}'...")
+        images = search.search_images(ticket['title'])
+        if not images:
+             # Fallback to angle if title yields no results
+             print(f"Journalist: No images found for title, trying angle '{angle}'...")
+             images = search.search_images(angle)
+        
+        print(f"Journalist: Found {len(images)} images.")
+
         # --- Step 6: Compile Dossier ---
         dossier = {
             "ticket_id": ticket_id,
@@ -131,6 +141,7 @@ def process_assignments():
             "missing_context": missing_context,
             "key_facts": facts,
             "key_quotes": quotes,
+            "images": images,
             "search_results": search_results, # Keep for reference
             "generated_at": time.strftime('%Y-%m-%d %H:%M:%S')
         }
