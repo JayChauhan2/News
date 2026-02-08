@@ -4,27 +4,27 @@
     "role": "News Monitor",
     "status": "Filtering",
     "current_assignment": "Filtering 40 articles in Tech...",
-    "last_updated": "2026-02-08T11:07:40.054380"
+    "last_updated": "2026-02-08T11:29:51.843316"
   },
   {
     "name": "The Chief Editor",
     "role": "Editor-in-Chief",
-    "status": "Scoring",
-    "current_assignment": "Evaluating editorial value of: Consolidating systems for AI with iPaaS...",
-    "last_updated": "2026-02-08T11:08:02.299124"
+    "status": "Assigning",
+    "current_assignment": "Reviewing scored stories for assignment...",
+    "last_updated": "2026-02-08T11:30:25.422048"
   },
   {
     "name": "The Investigative Journalist",
     "role": "Journalist",
-    "status": "Researching",
-    "current_assignment": "Investigating: Two Volleyball Leagues Want to Be the Ne...",
-    "last_updated": "2026-02-08T11:06:15.409971"
+    "status": "Investigating",
+    "current_assignment": "Interrogating lead: An experimental surgery is helping cance...",
+    "last_updated": "2026-02-08T11:33:11.875149"
   },
   {
     "name": "The Senior Reporter",
     "role": "Journalist",
-    "status": "Idle",
-    "current_assignment": "Waiting for new assignments...",
-    "last_updated": "2026-02-08T11:08:00.579566"
+    "status": "Formatting",
+    "current_assignment": "Optimizing for SEO and selecting images...",
+    "last_updated": "2026-02-08T11:34:17.851988"
   }
 ]

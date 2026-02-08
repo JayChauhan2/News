@@ -11,33 +11,48 @@ def write_article(dossier, style="WITTY"):
     
     system_prompt = prompts.WITTY_TECH_BLOGGER if style == "WITTY" else prompts.SERIOUS_ANALYST
     
-    # Construct the user prompt with facts
+    # Construct the user prompt with rich data
+    angle = dossier.get("angle", "General Overview")
+    rationale = dossier.get("angle_rationale", "")
+    
+    quotes_text = "\n".join([f"- {q['source']}: \"{q['quote']}\"" for q in dossier.get("key_quotes", [])])
+    if not quotes_text:
+        quotes_text = "No direct quotes available."
+        
     facts_text = "\n".join(dossier.get('key_facts', []))
-    search_summary = json.dumps(dossier.get('search_results', []), indent=2)
+    missing_context = dossier.get("missing_context", "None identified.")
     
     current_date = datetime.datetime.now().strftime('%A, %B %d, %Y')
     
     user_prompt = f"""
-    Here is the Research Dossier. Use these facts to write the article.
+    The Research Dossier is ready. Write the article now.
     Current Date: {current_date}
-    Do NOT make up facts not present here.
     
-    Title: {dossier['title']}
-    Target Category: {dossier.get('category', 'Tech')} (You may add a second relevant category if needed)
-    Available Categories: World, Business, U.S., Politics, Economy, Tech, Markets & Finance, Opinion, Free Expression, Arts, Lifestyle, Real Estate, Personal Finance, Health, Style, Sports.
+    --------------------------------------------------
+    THE ASSIGNMENT
+    Lead Title: {dossier['title']}
+    Target Category: {dossier.get('category', 'Tech')}
     
-    Key Facts:
+    YOUR ANGLE: {angle}
+    Rationale: {rationale}
+    --------------------------------------------------
+    
+    PRIMARY SOURCES & QUOTES (Use these!):
+    {quotes_text}
+    
+    KEY FACTS & CONTEXT:
     {facts_text}
     
-    Search Context:
-    {search_summary}
+    NEGATIVE SPACE (What is missing/hidden):
+    {missing_context}
     
+    --------------------------------------------------
     Output ONLY a JSON object with the following structure:
     {{
-        "headline": "A catchy, click-worthy headline",
+        "headline": "A sharp, angle-driven headline",
         "category": ["Category1", "OptionalCategory2"], 
         "content": "The full markdown article content...",
-        "image_prompt": "A description for an AI image generator to create a hero image"
+        "image_prompt": "A description for an AI image generator to create a hero image matching the angle"
     }}
     """
     

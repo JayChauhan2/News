@@ -1,1 +1,32 @@
-[]
+[
+  {
+    "id": "test_1770567309",
+    "title": "Google announces new AI agent that can replace junior developers",
+    "source_link": "https://twitter.com/GoogleAI/status/123456789",
+    "category": "Tech",
+    "status": "pending",
+    "created_at": "2026-02-08 11:15:09"
+  },
+  {
+    "id": "1770568225_1",
+    "status": "pending",
+    "score": 8.0,
+    "reasoning": "This news story has a high impact as it discusses an experimental surgical procedure that is helping cancer survivors give birth, which is a significant breakthrough in the medical field. The novelty is also high as it presents new information about this experimental procedure. The relevance to technology and AI is also high, as the story is part of a technology-focused newsletter and discusses the use of technology in the medical field.",
+    "title": "The Download: helping cancer survivors to give birth, and cleaning up Bangladesh\u2019s garment industry",
+    "source_link": "https://www.technologyreview.com/2026/02/06/1132375/the-download-helping-cancer-survivors-to-give-birth-and-cleaning-up-bangladeshs-garment-industry/",
+    "cluster_size": 1,
+    "category": "Tech",
+    "created_at": "2026-02-08 11:30:25"
+  },
+  {
+    "id": "1770568225_2",
+    "status": "pending",
+    "score": 8.0,
+    "reasoning": "This news story has a high impact as it discusses an experimental surgical procedure that could help cancer survivors have babies, which is a significant development in medical science. The novelty score is 7 as it presents new information about a potential solution for the damaging side effects of cancer treatments on reproductive organs. The relevance score is 9 as the story is related to technology and AI, specifically in the field of medical advancements and surgical procedures.",
+    "title": "An experimental surgery is helping cancer survivors give birth",
+    "source_link": "https://www.technologyreview.com/2026/02/06/1132319/experimental-surgery-colorectal-cancer-survivors-pregnant-birth/",
+    "cluster_size": 1,
+    "category": "Tech",
+    "created_at": "2026-02-08 11:30:25"
+  }
+]

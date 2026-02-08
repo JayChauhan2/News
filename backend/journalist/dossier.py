@@ -1,15 +1,15 @@
 import json
 import os
 import time
-from . import search, scraper, memory
-from backend import status_manager
+from . import search, scraper, memory, prompts
+from backend import status_manager, llm_client
 
 ASSIGNMENTS_FILE = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), 'public', 'assignments.json')
 DOSSIER_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), 'public', 'dossiers')
 
 def process_assignments():
     """
-    Reads assignment tickets, performs research, and generates dossiers.
+    Reads assignment tickets, performs deep investigation, and generates enhanced dossiers.
     """
     if not os.path.exists(ASSIGNMENTS_FILE):
         print("Journalist: No assignments file found.")
@@ -21,7 +21,7 @@ def process_assignments():
     os.makedirs(DOSSIER_DIR, exist_ok=True)
     
     if not tickets:
-        status_manager.update_agent_status("The Investigative Journalist", "Journalist", "Idle", "Waiting for assignments...")
+        status_manager.update_agent_status("The Investigative Journalist", "Journalist", "Idle", "Waiting for leads...")
     
     for ticket in tickets:
         ticket_id = ticket.get('id')
@@ -31,68 +31,113 @@ def process_assignments():
         if os.path.exists(dossier_path):
             continue
             
-        print(f"\nJournalist: Working on Assignment '{ticket['title']}'...")
-        status_manager.update_agent_status("The Investigative Journalist", "Journalist", "Researching", f"Investigating: {ticket['title'][:40]}...")
+        print(f"\nJournalist: Investigating Lead '{ticket['title']}'...")
+        status_manager.update_agent_status("The Investigative Journalist", "Journalist", "Investigating", f"Interrogating lead: {ticket['title'][:40]}...")
         
-        # 1. Search Tavily
-        query = f"{ticket['title']} latest news details"
-        search_results = search.search_topic(query)
+        lead = f"Title: {ticket['title']}\nInitial Link: {ticket.get('source_link', 'None')}"
         
-        # 2. Scrape & Store
-        facts = []
-        images = []
-        for result in search_results[:3]: # Limit to top 3
-            url = result['url']
-            scrape_data = scraper.scrape_url(url)
+        # --- Step 1: Uncomfortable Questions ---
+        print("Journalist: Generating uncomfortable questions...")
+        q_sys = prompts.GENERATE_QUESTIONS_PROMPT.replace("{lead}", lead)
+        questions_data = llm_client.generate_json(q_sys, "Generate questions now.")
+        questions = questions_data.get("questions", []) if questions_data else []
+        
+        # --- Step 2: Select Angle & Primary Sources ---
+        print("Journalist: Selecting angle and primary sources...")
+        a_sys = prompts.SELECT_ANGLE_PROMPT.replace("{lead}", lead).replace("{questions}", "\n".join(questions))
+        angle_data = llm_client.generate_json(a_sys, "Select angle now.")
+        
+        angle = angle_data.get("angle", "Deep Analysis")
+        angle_rationale = angle_data.get("rationale", "")
+        primary_queries = angle_data.get("search_queries", [f"{ticket['title']} official statement"])
+        
+        print(f"Journalist: Angle selected: {angle}")
+        
+        # --- Step 3: Targeted Search (Primary Sources) ---
+        search_results = []
+        for query in primary_queries:
+            results = search.search_topic(query)
+            search_results.extend(results)
             
-            if isinstance(scrape_data, dict) and scrape_data.get('text'):
-                content = scrape_data['text']
-                image = scrape_data.get('image')
-                
-                if image:
-                    images.append(image)
-                
-                meta = {"source": url, "title": result.get('title', 'Unknown')}
-                memory.store_research(content, meta)
-                facts.append(f"Source: {url}\nSummary: {content[:500]}...") # Keep a summary
+        # Deduplicate results by URL
+        seen_urls = set()
+        unique_results = []
+        for r in search_results:
+            if r['url'] not in seen_urls:
+                unique_results.append(r)
+                seen_urls.add(r['url'])
+        search_results = unique_results[:5] # Keep top 5 most relevant
+        
+        # --- Step 4: Scrape & Extract Context ---
+        facts = []
+        quotes = []
+        
+        for result in search_results:
+            url = result['url']
+            scrape_data = scraper.scrape_url(url) # returns dict or text
+            
+            content = ""
+            if isinstance(scrape_data, dict):
+                content = scrape_data.get('text', '')
             else:
-                # Fallback for legacy
-                if scrape_data:
-                    meta = {"source": url, "title": result.get('title', 'Unknown')}
-                    memory.store_research(scrape_data, meta)
-                    facts.append(f"Source: {url}\nSummary: {scrape_data[:500]}...")
-                 
-        # 3. Fallback Image Search
-        if not images:
-            print("Journalist: No images found in articles. Searching online...")
-            try:
-                found_images = search.search_images(ticket['title'])
-                if found_images:
-                    images.extend(found_images)
-                    print(f"Journalist: Found {len(found_images)} images online.")
-            except Exception as e:
-                print(f"Journalist: Image search failed: {e}")
+                content = scrape_data
                 
-        # 4. Compile Dossier
-        # In a full agent, we'd loop RAG queries here. 
-        # For MVP, we save the search summaries and metadata.
+            if content:
+                # Extract Quotes/Facts via LLM
+                e_sys = prompts.EXTRACT_QUOTES_PROMPT.replace("{text}", content[:4000]) # Limit length
+                extracted = llm_client.generate_json(e_sys, "Extract quotes and facts.")
+                
+                if extracted:
+                    if extracted.get("quotes"):
+                        quotes.extend(extracted["quotes"])
+                    if extracted.get("facts"):
+                         facts.extend(extracted["facts"])
+                
+                # Fallback: Just keep a summary if extraction fails or yields nothing
+                facts.append(f"Source ({url}): {content[:300]}...")
+
+        # --- Step 5: Negative Space Analysis ---
+        print("Journalist: Analyzing negative space...")
+        info_summary = "\n".join(facts[:10])
+        n_sys = prompts.NEGATIVE_SPACE_PROMPT.replace("{lead}", lead).replace("{info_summary}", info_summary)
+        negative_space_data = llm_client.generate_json(n_sys, "Analyze negative space.")
+        
+        missing_context = negative_space_data.get("missing_context", "")
+        follow_up_queries = negative_space_data.get("follow_up_queries", [])
+        
+        # Optional: Perform follow-up search for negative space (One pass)
+        if follow_up_queries:
+            print(f"Journalist: Hunting for missing context: {follow_up_queries[0]}...")
+            follow_up_results = search.search_topic(follow_up_queries[0])
+            if follow_up_results:
+                # Quick scrape of top result
+                fu_url = follow_up_results[0]['url']
+                fu_scrape = scraper.scrape_url(fu_url)
+                fu_content = fu_scrape.get('text', '') if isinstance(fu_scrape, dict) else fu_scrape
+                if fu_content:
+                    facts.append(f"Follow-up Context ({fu_url}): {fu_content[:500]}...")
+
+        # --- Step 6: Compile Dossier ---
         dossier = {
             "ticket_id": ticket_id,
-            "ticket_id": ticket_id,
             "title": ticket['title'],
-            "original_title": ticket['title'], # Explicitly save for dedup
-            "source_link": ticket.get('source_link'), # Save for dedup
+            "original_title": ticket['title'],
+            "source_link": ticket.get('source_link'),
             "category": ticket.get("category", "Tech"),
             "status": "researched",
-            "search_results": search_results,
-            "images": images,
-            "key_facts": facts, # Simple list for now
+            "angle": angle,
+            "angle_rationale": angle_rationale,
+            "uncomfortable_questions": questions,
+            "missing_context": missing_context,
+            "key_facts": facts,
+            "key_quotes": quotes,
+            "search_results": search_results, # Keep for reference
             "generated_at": time.strftime('%Y-%m-%d %H:%M:%S')
         }
         
         with open(dossier_path, 'w') as f:
             json.dump(dossier, f, indent=2)
             
-        print(f"Journalist: Dossier saved to {dossier_path}")
+        print(f"Journalist: Detailed Dossier saved to {dossier_path}")
         
     print("Journalist: All assignments processed.")
