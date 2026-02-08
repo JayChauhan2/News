@@ -29,9 +29,10 @@ def job():
         status_manager.update_agent_status("The Watchtower", "News Monitor", "Scanning", f"Scanning for {category} news...")
         
         # 1. Fetch
-        rss_articles = sources.fetch_rss_news(category)
+        # rss_articles = sources.fetch_rss_news(category) # DISABLED: Social-first mode
+        rss_articles = [] 
         try:
-            web_articles = trend_spotter.fetch_trending_news(category)
+            web_articles = trend_spotter.fetch_social_news(category)
         except Exception as e:
             print(f"Trend Spotter failed for {category}: {e}")
             web_articles = []

@@ -12,23 +12,16 @@ def create_ssl_context():
 # Override default SSL context creation
 ssl._create_default_https_context = create_ssl_context
 
-# List of legitimate news sources on X
+# List of legitimate news sources and personalities on X
 LEGIT_SOURCES = [
-    "Reuters",
-    "AP",
-    "BBCBreaking",
-    "CNN",
-    "TechCrunch",
-    "TheVerge",
-    "WSJ",
-    "Bloomberg",
-    "nytimes"
+    "Reuters", "AP", "BBCBreaking", "CNN", "TechCrunch", "TheVerge", "WSJ", "Bloomberg", "nytimes",
+    "elonmusk", "sama", "paulg", "ycombinator", "NASA", "SpaceX", "GoogleAI", "OpenAI"
 ]
 
 def get_x_topics():
     """
     Searches for recent content from legitimate X accounts to discover trending topics.
-    Returns a list of topic strings.
+    Returns a list of dicts: {'text': str, 'url': str, 'source': str}
     """
     topics = []
     print(f"[{time.strftime('%H:%M:%S')}] X Monitor: Scanning top sources...")
@@ -37,7 +30,7 @@ def get_x_topics():
         # Pass verify=False to bypass SSL errors, add timeout
         with DDGS(verify=False, timeout=20) as ddgs:
             # Shuffle sources to vary the "feed" each time
-            selected_sources = random.sample(LEGIT_SOURCES, k=4)
+            selected_sources = random.sample(LEGIT_SOURCES, k=5)
             
             for source in selected_sources:
                 query = f"site:twitter.com/{source}"
@@ -70,6 +63,7 @@ def get_x_topics():
                     for r in results:
                         title = r.get('title', '')
                         body = r.get('body', '')
+                        href = r.get('href', '')
                         
                         # Heuristic: Extract useful parts from the snippet
                         content = f"{title} {body}"
@@ -77,8 +71,12 @@ def get_x_topics():
                         # Clean up common noise
                         content = content.replace(" on Twitter", "").replace(" on X", "")
                         
-                        if len(content) > 50:
-                            topics.append(content[:150] + "...")
+                        if len(content) > 30:
+                            topics.append({
+                                "text": content[:200] + "...",
+                                "url": href,
+                                "source": f"X (@{source})"
+                            })
                             
                 except Exception as e:
                     if "No results" in str(e):
@@ -89,8 +87,14 @@ def get_x_topics():
     except Exception as e:
         print(f"X Monitor: Critical error initializing DDG: {e}")
                 
-    # Deduplicate
-    unique_topics = list(set(topics))
+    # Deduplicate by text content (simple)
+    seen_texts = set()
+    unique_topics = []
+    for t in topics:
+        if t['text'] not in seen_texts:
+            unique_topics.append(t)
+            seen_texts.add(t['text'])
+            
     print(f"[{time.strftime('%H:%M:%S')}] X Monitor: Discovered {len(unique_topics)} potential topics.")
     
     try:

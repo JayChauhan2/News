@@ -17,6 +17,25 @@ Focus on:
 Output a JSON object with a key "questions" containing a list of 10 string questions.
 """
 
+THINKING_PROMPT = """
+You are a Senior Editor and Investigator.
+We have a new lead. BEFORE you act, you must THINK.
+
+Input Lead: "{lead}"
+
+Analyze this lead and determine:
+1. What "Type" of story is this? (e.g., Corporate Scandal, Political Maneuvering, Scientific Breakthrough, Viral Rumor)
+2. What is the BEST EVIDENCE potentially available? 
+   - Do NOT ask for "news articles". 
+   - Ask for: "Court filings", "Patent applications", "Flight logs", "SEC disclosures", "git commit logs", "leaked memos".
+3. What is your STRATEGY to verify this without relying on the mainstream media narrative?
+
+Output a JSON object with:
+"story_type": "Type of story",
+"best_evidence": "Description of the ideal primary source evidence",
+"investigation_strategy": "Step-by-step plan to find the primary source"
+"""
+
 SELECT_ANGLE_PROMPT = """
 You are an Editor deciding the "Angle" of a story.
 We don't want to just cover the "Topic". We want an "Angle".
@@ -64,9 +83,13 @@ We need DIRECT QUOTES and PRIMARY FACTS.
 Input Scraped Text:
 {text}
 
-Extract:
-1. Direct quotes from named individuals (or official statements).
-2. Hard data points (numbers, dates, metrics).
+CRITICAL INSTRUCTION:
+- IGNORE commentary from the journalist/author of the text. 
+- IGNORE "according to [Newspaper]".
+- ONLY extract:
+  1. Direct quotes from the subjects of the story (use the actual speaker's name).
+  2. Hard data/statistics (numbers, dates, prices).
+  3. Sections of official documents cited in the text.
 
 If there are NO direct quotes from humans, create a "Simulated Analyst Perspective" based on the facts. 
 This must be clearly labeled as "Simulated Perspective" but should sound like a cynical industry expert analyzing the situation.

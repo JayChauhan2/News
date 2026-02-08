@@ -9,78 +9,36 @@ from backend import llm_client
 from backend.journalist import search
 from backend.watchtower import x_monitor
 
-def get_trend_queries(category="Tech"):
+def fetch_social_news(category="Tech"):
     """
-    Asks the LLM for a list of diverse, trending search queries for a specific category.
+    Fetches raw social signals (X/Twitter) and treats them as the primary news leads.
+    Does NOT perform a secondary 'search for articles' step. 
+    The 'lead' itself is the news.
     """
-    # 1. Get signals from X (optional context, maybe less relevant for specific categories, but keeping it)
+    print(f"[{time.strftime('%H:%M:%S')}] Trend Spotter: Scanning social signals for {category}...")
+    
+    # 1. Get structured signals from X
+    # Note: x_monitor currently searches a mix of sources. 
+    # ideally we'd pass 'category' to x_monitor to filter sources, 
+    # but for now we'll take all valid leads.
     try:
-        x_signals = x_monitor.get_x_topics()
-        signals_text = "\n".join([f"- {s}" for s in x_signals])
-    except:
-        signals_text = "No social signals available."
-    
-    # 2. Feed to LLM
-    today = time.strftime('%Y-%m-%d')
-    system_prompt = f"""
-    You are an Editor-in-Chief for a major news outlet. 
-    Today's date is {today}.
-    Your goal is to discover breaking news for the category: {category.upper()}.
-    
-    Output a JSON object with a key "queries" containing a list of 5 distinct, specific search queries.
-    
-    Focus on high-quality, substantial news within {category}.
-    
-    FORBIDDEN TOPICS:
-    - Do NOT ask for "hacks", "tips", "tricks", "tutorials", or "rumors".
-    - Do NOT ask for generic topics like "News" or "{category}".
-    
-    Be specific, e.g., if category is "World", ask for "UN Security Council vote"; if "Sports", ask for "NBA Trade Deadline results".
-    
-    SPECIAL INSTRUCTION FOR "STARTUPS":
-    If the category is "Startups", specifically look for:
-    - "New AI startup launch"
-    - "Series A/B funding news"
-    - "Y Combinator monitor"
-    - "Product Hunt top launches today"
-    """
-    
-    user_prompt = f"""
-    Generate 5 unique, fresh search queries for {category} news appearing right now (Timestamp: {time.time()}).
-    
-    Contextual signals (use only if relevant to {category}):
-    {signals_text}
-    """
-    
-    data = llm_client.generate_json(system_prompt, user_prompt)
-    if data and "queries" in data:
-        return data["queries"]
-    return [f"Latest {category} news", f"Breaking {category} stories"]
-
-def fetch_trending_news(category="Tech"):
-    """
-    Generates queries, searches the web, and returns normalized articles for a category.
-    """
-    queries = get_trend_queries(category)
-    print(f"[{time.strftime('%H:%M:%S')}] Trend Spotter: Searching {category}: {queries}")
+        x_leads = x_monitor.get_x_topics()
+    except Exception as e:
+        print(f"Error fetching X topics: {e}")
+        return []
     
     all_articles = []
     
-    for query in queries:
-        # Search Tavily
-        results = search.search_topic(query)
-        
-        # Normalize to match RSS format
-        for item in results:
-            normalized = {
-                "title": item.get("title", "No Title"),
-                "link": item.get("url", ""),
-                "published": time.strftime('%Y-%m-%dT%H:%M:%SZ'), # Approximation as Tavily doesn't always give date
-                "summary": item.get("content", ""),
-                "source": "Web Search: " + query,
-                "category": category # Tag the article
-            }
-            all_articles.append(normalized)
+    for lead in x_leads:
+        normalized = {
+            "title": lead.get("text", "No Title")[:100], # Use start of tweet as title
+            "link": lead.get("url", ""),
+            "published": time.strftime('%Y-%m-%dT%H:%M:%SZ'), 
+            "summary": lead.get("text", ""),
+            "source": lead.get("source", "X"),
+            "category": category # Tag the article with the requested category (or maybe detect it later?)
+        }
+        all_articles.append(normalized)
             
-    print(f"[{time.strftime('%H:%M:%S')}] Trend Spotter: Found {len(all_articles)} web articles for {category}.")
+    print(f"[{time.strftime('%H:%M:%S')}] Trend Spotter: Found {len(all_articles)} social leads for {category}.")
     return all_articles

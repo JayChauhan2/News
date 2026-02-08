@@ -1,13 +1,1 @@
-[
-  {
-    "id": "1770569921_2",
-    "status": "pending",
-    "score": 8.0,
-    "reasoning": "This news highlights the intersection of AI and the romance publishing industry, a significant development as AI-generated content becomes more prevalent. The story touches on both the adoption and resistance to AI in creative fields, making it highly relevant to discussions about AI's role in art and literature. The impact is substantial as it affects a major publishing sector, while the novelty lies in AI's expanding capabilities in emotional and creative writing.",
-    "title": "Can AI Chatbots Write Emotionally Rich Romance Books?",
-    "source_link": "https://www.nytimes.com/2026/02/08/business/ai-claude-romance-books.html",
-    "cluster_size": 1,
-    "category": "Business",
-    "created_at": "2026-02-08 11:58:41"
-  }
-]
+[{"id": "thinking_test_789", "title": "NASA announces discovery of water on Mars moon", "source_link": "https://twitter.com/NASA/status/987654321", "category": "Science", "status": "assigned"}]

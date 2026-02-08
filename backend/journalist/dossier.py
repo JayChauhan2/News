@@ -35,7 +35,20 @@ def process_assignments():
         status_manager.update_agent_status("The Investigative Journalist", "Journalist", "Investigating", f"Interrogating lead: {ticket['title'][:40]}...")
         
         lead = f"Title: {ticket['title']}\nInitial Link: {ticket.get('source_link', 'None')}"
+
+        # --- Step 0: Agentic Thinking (Plan before acting) ---
+        print("Journalist: Thinking about the lead...")
+        status_manager.update_agent_status("The Investigative Journalist", "Journalist", "Thinking", "Formulating investigation strategy...")
         
+        t_sys = prompts.THINKING_PROMPT.replace("{lead}", lead)
+        thoughts_data = llm_client.generate_json(t_sys, "Think about this story.")
+        
+        story_type = thoughts_data.get("story_type", "General News")
+        best_evidence = thoughts_data.get("best_evidence", "Official statements")
+        strategy = thoughts_data.get("investigation_strategy", "Search for primary sources")
+        
+        print(f"Journalist: Strategy -> Find {best_evidence}")
+
         # --- Step 1: Uncomfortable Questions ---
         print("Journalist: Generating uncomfortable questions...")
         q_sys = prompts.GENERATE_QUESTIONS_PROMPT.replace("{lead}", lead)
@@ -45,6 +58,10 @@ def process_assignments():
         # --- Step 2: Select Angle & Primary Sources ---
         print("Journalist: Selecting angle and primary sources...")
         a_sys = prompts.SELECT_ANGLE_PROMPT.replace("{lead}", lead).replace("{questions}", "\n".join(questions))
+        
+        # Add context from Thinking step to guide the angle
+        a_sys += f"\n\nCONTEXT FROM PLANNING:\nTarget Evidence: {best_evidence}\nStrategy: {strategy}\nUse this to generate BETTER search queries."
+        
         angle_data = llm_client.generate_json(a_sys, "Select angle now.")
         
         angle = angle_data.get("angle", "Deep Analysis")
