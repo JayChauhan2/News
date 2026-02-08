@@ -33,67 +33,84 @@ def get_x_topics():
     topics = []
     print(f"[{time.strftime('%H:%M:%S')}] X Monitor: Scanning top sources...")
     
-    # Pass verify=False to bypass SSL errors
-    with DDGS(verify=False) as ddgs:
-        # Shuffle sources to vary the "feed" each time
-        selected_sources = random.sample(LEGIT_SOURCES, k=4)
-        
-        for source in selected_sources:
-            query = f"site:twitter.com/{source}"
-            print(f"  - Checking @{source} via DDG...")
+    try:
+        # Pass verify=False to bypass SSL errors, add timeout
+        with DDGS(verify=False, timeout=20) as ddgs:
+            # Shuffle sources to vary the "feed" each time
+            selected_sources = random.sample(LEGIT_SOURCES, k=4)
             
-            # Update status for granular feedback
-            try:
-                from .. import status_manager
-                status_manager.update_agent_status(
-                    "The Watchtower", 
-                    "News Monitor", 
-                    "Scanning", 
-                    f"Analyzing recent tweets from @{source}..."
-                )
-            except ImportError:
-                pass # Handle extensive path issues if run directly
-            
-            try:
-                # Search for recent results (past day)
-                results = list(ddgs.text(query, max_results=3, timelimit='d'))
+            for source in selected_sources:
+                query = f"site:twitter.com/{source}"
+                print(f"  - Checking @{source} via DDG...")
                 
-                for r in results:
-                    title = r.get('title', '')
-                    body = r.get('body', '')
+                # Update status for granular feedback
+                try:
+                    from .. import status_manager
+                    status_manager.update_agent_status(
+                        "The Watchtower", 
+                        "News Monitor", 
+                        "Scanning", 
+                        f"Analyzing recent tweets from @{source}..."
+                    )
+                except ImportError:
+                    pass 
+                
+                try:
+                    # Try with daily limit first
+                    try:
+                        results = list(ddgs.text(query, max_results=3, timelimit='d'))
+                    except Exception:
+                        results = []
+
+                    # Fallback: try without time limit if daily fails
+                    if not results:
+                         time.sleep(1)
+                         results = list(ddgs.text(query, max_results=3))
                     
-                    # Heuristic: Extract useful parts from the snippet
-                    # Often DDG snippets for Twitter are like "Name (@Handle) ... content ..."
-                    content = f"{title} {body}"
-                    
-                    # Clean up common noise
-                    content = content.replace(" on Twitter", "").replace(" on X", "")
-                    
-                    if len(content) > 50:
-                        topics.append(content[:150] + "...")
+                    for r in results:
+                        title = r.get('title', '')
+                        body = r.get('body', '')
                         
-            except Exception as e:
-                print(f"    Error checking {source}: {e}")
+                        # Heuristic: Extract useful parts from the snippet
+                        content = f"{title} {body}"
+                        
+                        # Clean up common noise
+                        content = content.replace(" on Twitter", "").replace(" on X", "")
+                        
+                        if len(content) > 50:
+                            topics.append(content[:150] + "...")
+                            
+                except Exception as e:
+                    if "No results" in str(e):
+                        print(f"    - No results for @{source}")
+                    else:
+                        print(f"    Error checking {source}: {e}")
+                    
+    except Exception as e:
+        print(f"X Monitor: Critical error initializing DDG: {e}")
                 
     # Deduplicate
     unique_topics = list(set(topics))
     print(f"[{time.strftime('%H:%M:%S')}] X Monitor: Discovered {len(unique_topics)} potential topics.")
     
-    from .. import status_manager
-    if unique_topics:
-        status_manager.update_agent_status(
-            "The Watchtower", 
-            "News Monitor", 
-            "Active", 
-            f"identified {len(unique_topics)} potential leads from X."
-        )
-    else:
-        status_manager.update_agent_status(
-            "The Watchtower", 
-            "News Monitor", 
-            "Idle", 
-            "Waiting for next scan cycle..."
-        )
+    try:
+        from .. import status_manager
+        if unique_topics:
+            status_manager.update_agent_status(
+                "The Watchtower", 
+                "News Monitor", 
+                "Active", 
+                f"identified {len(unique_topics)} potential leads from X."
+            )
+        else:
+            status_manager.update_agent_status(
+                "The Watchtower", 
+                "News Monitor", 
+                "Idle", 
+                f"Waiting for next scan cycle... (Found 0 topics)"
+            )
+    except ImportError:
+        pass
         
     return unique_topics
 

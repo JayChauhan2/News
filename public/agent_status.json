@@ -2,9 +2,9 @@
   {
     "name": "The Watchtower",
     "role": "News Monitor",
-    "status": "Idle",
-    "current_assignment": "Waiting for next scan cycle...",
-    "last_updated": "2026-02-08T09:56:46.042300"
+    "status": "Filtering",
+    "current_assignment": "Filtering 40 articles in Business...",
+    "last_updated": "2026-02-08T11:05:23.188699"
   },
   {
     "name": "Watchtower",
@@ -18,20 +18,20 @@
     "role": "Editor-in-Chief",
     "status": "Assigning",
     "current_assignment": "Reviewing scored stories for assignment...",
-    "last_updated": "2026-02-08T09:56:35.137862"
+    "last_updated": "2026-02-08T11:06:02.446738"
   },
   {
     "name": "The Investigative Journalist",
     "role": "Journalist",
-    "status": "Idle",
-    "current_assignment": "Waiting for assignments...",
-    "last_updated": "2026-02-08T09:56:35.138947"
+    "status": "Researching",
+    "current_assignment": "Investigating: Two Volleyball Leagues Want to Be the Ne...",
+    "last_updated": "2026-02-08T11:06:15.409971"
   },
   {
     "name": "The Senior Reporter",
     "role": "Journalist",
-    "status": "Idle",
-    "current_assignment": "Waiting for new assignments...",
-    "last_updated": "2026-02-08T09:56:46.796535"
+    "status": "Drafting",
+    "current_assignment": "Writing article about: Two Volleyball Leagues Want to...",
+    "last_updated": "2026-02-08T11:06:26.652129"
   }
 ]

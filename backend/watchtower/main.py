@@ -53,14 +53,17 @@ def job():
             # However, to simulate 'The Chief Editor' agent, we should update ITS status here or inside the functions.
             # I will update it here for high level 'Scoring' status, and inside for granular 'Scoring X'.
             
-            # Throttle: Only process Top 1 cluster per category to keep volume manageable (16 categories * 1 = 16 potential stories)
-            for cluster in clusters[:1]:
+            # Throttle: Process top 5 clusters to increase throughput
+            for cluster in clusters[:5]:
                 # Score the first article as representative
                 try:
                     score_data = scoring.score_article(cluster[0])
                     scored_clusters.append((cluster, score_data))
                 except Exception as e:
                     print(f"Scoring failed: {e}")
+            
+            if not scored_clusters:
+                print(f"  - No clusters scored high enough (or scoring failed).")
                 
             # 4. Create Assignments
             assigner.create_assignments(scored_clusters)
@@ -74,9 +77,12 @@ def job():
             publisher.publish_pending_dossiers()
             
             # 7. Save Raw Data
-            storage.save_news(articles)
+            storage.update_category_news(category, articles)
         else:
             print(f"No articles found for {category}.")
+            # Even if empty, we might want to clear old data for this category?
+            # Yes, to reflect current state.
+            storage.update_category_news(category, [])
             
     print(f"[{time.strftime('%H:%M:%S')}] Cycle Completed.")
     status_manager.update_agent_status("The Watchtower", "News Monitor", "Idle", "Waiting for next cycle...")

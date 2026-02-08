@@ -11,15 +11,14 @@ CATEGORY_FEEDS = {
     "World": [
         "https://rss.nytimes.com/services/xml/rss/nyt/World.xml", 
         "https://feeds.bbci.co.uk/news/world/rss.xml",
-        "http://feeds.reuters.com/reuters/worldNews"
+        "https://www.aljazeera.com/xml/rss/all.xml"
     ],
     "Politics": [
         "https://rss.nytimes.com/services/xml/rss/nyt/Politics.xml",
-        "http://feeds.reuters.com/reuters/politicsNews"
+        "https://feeds.bbci.co.uk/news/politics/rss.xml"
     ],
     "Business": [
         "https://rss.nytimes.com/services/xml/rss/nyt/Business.xml",
-        "http://feeds.reuters.com/reuters/businessNews",
         "https://feeds.bloomberg.com/markets/news.xml",
         "https://search.cnbc.com/rs/search/combinedcms/view.xml?partnerId=wrss01&id=10000664",
         "https://rss.nytimes.com/services/xml/rss/nyt/Economy.xml"

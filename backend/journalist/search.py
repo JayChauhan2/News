@@ -1,6 +1,7 @@
 from ddgs import DDGS
 import ssl
 import certifi
+import time
 
 # Use certifi's CA bundle for SSL verification
 def create_ssl_context():
@@ -18,25 +19,30 @@ def search_topic(query):
     print(f"Journalist: Searching for '{query}'...")
     results = []
     
-    try:
-        with DDGS() as ddgs:
-            # max_results=5 to match previous behavior
-            ddg_results = list(ddgs.text(query, max_results=5))
-            
-            for r in ddg_results:
-                # normalize to match previous Tavily structure approximately
-                results.append({
-                    "url": r.get('href', ''),
-                    "content": r.get('body', ''),
-                    "score": 1.0, # Dummy score as DDG doesn't provide it
-                    "title": r.get('title', '') # preserving title if useful
-                })
+    max_retries = 3
+    for attempt in range(max_retries):
+        try:
+            with DDGS(timeout=20) as ddgs:
+                # max_results=5 to match previous behavior
+                ddg_results = list(ddgs.text(query, max_results=5))
                 
-        return results
-        return results
-    except Exception as e:
-        print(f"Error searching DuckDuckGo: {e}")
-        return []
+                for r in ddg_results:
+                    # normalize to match previous Tavily structure approximately
+                    results.append({
+                        "url": r.get('href', ''),
+                        "content": r.get('body', ''),
+                        "score": 1.0, # Dummy score as DDG doesn't provide it
+                        "title": r.get('title', '') # preserving title if useful
+                    })
+                    
+            if results:
+                return results
+                
+        except Exception as e:
+            print(f"Error searching DuckDuckGo (Attempt {attempt+1}/{max_retries}): {e}")
+            time.sleep(2) # Wait a bit before retrying
+            
+    return results
 
 def search_images(query):
     """

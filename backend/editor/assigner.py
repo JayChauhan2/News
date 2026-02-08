@@ -17,7 +17,8 @@ def create_assignments(scored_clusters):
     status_manager.update_agent_status("The Chief Editor", "Editor-in-Chief", "Assigning", "Reviewing scored stories for assignment...")
     
     for cluster, score_data in scored_clusters:
-        if score_data['score'] >= 5:
+        # LOWERED THRESHOLD FOR DEBUGGING (was 5)
+        if score_data['score'] >= 0.1:
             # Create a ticket from the most representative article (the first one)
             main_article = cluster[0]
             
