@@ -3,28 +3,28 @@
     "name": "The Watchtower",
     "role": "News Monitor",
     "status": "Filtering",
-    "current_assignment": "Filtering 9 articles in Business...",
-    "last_updated": "2026-02-08T12:14:21.527968"
+    "current_assignment": "Filtering 10 articles in Tech...",
+    "last_updated": "2026-02-08T12:29:53.854347"
   },
   {
     "name": "The Chief Editor",
     "role": "Editor-in-Chief",
-    "status": "Scoring",
-    "current_assignment": "Evaluating editorial value of: TechCrunch TechCrunch @ TechCrunch Break...",
-    "last_updated": "2026-02-08T12:14:27.305810"
+    "status": "Assigning",
+    "current_assignment": "Reviewing scored stories for assignment...",
+    "last_updated": "2026-02-08T12:30:25.502986"
   },
   {
     "name": "The Investigative Journalist",
     "role": "Journalist",
     "status": "Thinking",
     "current_assignment": "Formulating investigation strategy...",
-    "last_updated": "2026-02-08T12:18:02.927264"
+    "last_updated": "2026-02-08T12:27:25.376414"
   },
   {
     "name": "The Senior Reporter",
     "role": "Journalist",
     "status": "Idle",
     "current_assignment": "Waiting for new assignments...",
-    "last_updated": "2026-02-08T12:18:13.435899"
+    "last_updated": "2026-02-08T12:30:19.628774"
   }
 ]
