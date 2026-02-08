@@ -1,1 +1,13 @@
-[]
+[
+  {
+    "id": "1770573025_0",
+    "status": "pending",
+    "score": 8.0,
+    "reasoning": "This news story has a high impact as it features advice from Sam Altman, a prominent figure in the tech industry. The novelty is moderate, as it presents a motivational quote rather than groundbreaking information. The relevance is high due to Altman's connection to AI and technology.",
+    "title": "Sam Altman: \"\u2018show up and do stuff, and then do ... Feb 18, 2023 \u00b7 Sam Altman @ sama \u2018show up and do",
+    "source_link": "https://twitter.com/sama/status/1627082941229862915",
+    "cluster_size": 1,
+    "category": "World",
+    "created_at": "2026-02-08 12:50:25"
+  }
+]
