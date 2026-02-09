@@ -1,1 +1,13 @@
-[]
+[
+  {
+    "id": "1770680005_0",
+    "status": "pending",
+    "score": 8.0,
+    "reasoning": "The news about Alphabet highlighting new AI-related risks in tapping debt market has a significant impact as it affects the company's financial strategy and business operations. The novelty is high as it reveals new information about the potential risks associated with AI in the advertising sector. The relevance is also high as it directly relates to AI and its impact on a major tech company's business.",
+    "title": "Alphabet highlights new AI-related risks in tapping debt market: 2 hours ago \u00b7 In Alphabet's annual ",
+    "source_link": "https://www.cnbc.com/2026/02/09/alphabet-highlights-new-ai-related-risks-in-tapping-debt-market.html",
+    "cluster_size": 1,
+    "category": "Business",
+    "created_at": "2026-02-09 18:33:25"
+  }
+]

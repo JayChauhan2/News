@@ -129,128 +129,118 @@ def get_business_signals():
 
 def get_x_topics():
     """
-    Searches for recent content from legitimate X accounts to discover trending topics.
-    Returns a list of dicts: {'text': str, 'url': str, 'source': str}
+    Scans X (Twitter) for recent posts from key accounts.
+    Iterates through ALL legitimate sources to ensure comprehensive coverage ("Deep Scan").
     """
     topics = []
-    print(f"[{time.strftime('%H:%M:%S')}] X Monitor: Scanning top sources...")
+    print(f"[{time.strftime('%H:%M:%S')}] X Monitor: Starting Deep Scan of top sources...")
     
     # Initialize Memory
     memory = MemoryManager()
     
     unique_topics = []
-    attempts = 0
-    max_attempts = 3
     
-    while attempts < max_attempts and len(unique_topics) == 0:
-        attempts += 1
-        if attempts > 1:
-            print(f"[{time.strftime('%H:%M:%S')}] X Monitor: Attempt {attempts}/{max_attempts} - Retrying with different sources...")
-            
-        try:
-            # Pass verify=False to bypass SSL errors, add timeout
-            with DDGS(verify=False, timeout=20) as ddgs:
-                # Shuffle sources to vary the "feed" each time
-                selected_sources = random.sample(LEGIT_SOURCES, k=5)
-                
-                for source in selected_sources:
-                    # Use the source name directly for news search
-                    query = f'"{source}"'
-                    print(f"  - Checking news about {source} via DDG News...")
-                    
-                    # Update status for granular feedback
-                    try:
-                        from .. import status_manager
-                        status_manager.update_agent_status(
-                            "The Watchtower", 
-                            "News Monitor", 
-                            "Scanning", 
-                            f"Analyzing recent news about {source}..."
-                        )
-                    except ImportError:
-                        pass 
-                
-                    try:
-                        # Use ddgs.news() instead of text()
-                        try:
-                            # timelimit='d' ensures last 24h
-                            results = list(ddgs.news(query, max_results=5, timelimit='d'))
-                        except Exception:
-                            results = []
+    # Shuffle sources to vary the order, but we will scan ALL of them (or a large chunk)
+    # The user accepted that this will take time.
+    sources_to_scan = LEGIT_SOURCES.copy()
+    random.shuffle(sources_to_scan)
+    
+    print(f"[{time.strftime('%H:%M:%S')}] X Monitor: {len(sources_to_scan)} sources queued for scanning.")
 
-                        for r in results:
-                            title = r.get('title', '')
-                            body = r.get('body', '')
-                            href = r.get('url', '') # news() uses 'url', not 'href'
-                            source_name = r.get('source', '')
-                            
-                            # Heuristic: Extract useful parts from the snippet
-                            content = f"{title} {body}"
-                            
-                            if len(content) > 30:
-                                # Clean href
-                                href = clean_url(href)
-                                
-                                # Validate URL
-                                if not is_valid_topic_url(href):
-                                    # print(f"    - Skipping invalid URL: {href}")
-                                    continue
-                                    
-                                # MEMORY CHECK
-                                if not memory.is_seen(href, title):
-                                    topics.append({
-                                        "text": content[:200] + "...",
-                                        "url": href,
-                                        "source": f"News: {source_name}"
-                                    })
-                                    # Add to memory immediately to prevent duplicates in same batch
-                                    memory.add(href, title)
-                                else:
-                                    # print(f"    - Skipping known topic: {title[:30]}...")
-                                    pass
-                            
-                    except Exception as e:
-                        if "No results" in str(e):
-                            print(f"    - No results for news about {source}")
-                        else:
-                            print(f"    Error checking {source}: {e}")
-                    
-        except Exception as e:
-            print(f"X Monitor: Critical error initializing DDG: {e}")
+    for i, source in enumerate(sources_to_scan):
+        try:
+            # Polite delay to avoid aggressive rate limiting since we are scanning many
+            if i > 0:
+                time.sleep(3) 
+
+            # Construct query for SPECIFIC tweets/statuses
+            # site:x.com "Source Name" /status/
+            # specific enough to get posts, broad enough to catch retweets/replies sometimes
+            query = f'site:x.com "{source}" /status/'
+            print(f"  - [{i+1}/{len(sources_to_scan)}] Scanning @{source} via DDG...")
             
-        # Deduplicate within this batch (though memory check handles most)
-        seen_texts = set()
-        for t in topics:
-            if t['text'] not in seen_texts:
-                unique_topics.append(t)
-                seen_texts.add(t['text'])
+            # Update status
+            try:
+                from .. import status_manager
+                status_manager.update_agent_status(
+                    "The Watchtower", 
+                    "Social Monitor", 
+                    "Deep Scan", 
+                    f"Checking @{source} ({i+1}/{len(sources_to_scan)})..."
+                )
+            except ImportError:
+                pass 
         
-        # If we found topics, break the retry loop
-        if unique_topics:
-            break
-            
-        # If no topics found, loop will continue to next attempt with new random sources
-        print(f"  - No new topics found in this batch. Retrying...")
+            try:
+                # Use text search, restricted to x.com, last 24h
+                with DDGS(verify=False, timeout=20) as ddgs:
+                    results = list(ddgs.text(query, max_results=3, timelimit='d'))
+
+                for r in results:
+                    title = r.get('title', '')
+                    body = r.get('body', '')
+                    href = r.get('href', '')
                     
-    # End of Retry Loop
+                    # Validate URL - must be a status
+                    if "/status/" not in href:
+                        continue
+                        
+                    # Heuristic: Title often contains "on X: ..." or "on Twitter: ..."
+                    # We want the actual content. 
+                    # DDG snippet (body) is usually the tweet text.
+                    content = body
+                    
+                    if len(content) > 20:
+                        # Clean href
+                        href = clean_url(href)
+                        
+                        # MEMORY CHECK
+                        if not memory.is_seen(href, content[:50]): # Use content start as approximate key if title is generic
+                            topics.append({
+                                "text": content, # potentially limited length
+                                "url": href,
+                                "source": f"Post by {source}"
+                            })
+                            memory.add(href, content[:50])
+                            print(f"    + Found lead: {content[:40]}...")
+                        else:
+                            # print(f"    - Skipping known: {content[:30]}...")
+                            pass
+                    
+            except Exception as e:
+                if "No results" in str(e):
+                    # print(f"    - No recent posts found for {source}")
+                    pass
+                else:
+                    print(f"    Error checking {source}: {e}")
             
-    print(f"[{time.strftime('%H:%M:%S')}] X Monitor: Discovered {len(unique_topics)} potential topics.")
+        except Exception as e:
+            print(f"X Monitor: Critical error scanning {source}: {e}")
+
+    # Deduplicate
+    seen_urls = set()
+    for t in topics:
+        if t['url'] not in seen_urls:
+            unique_topics.append(t)
+            seen_urls.add(t['url'])
+            
+    print(f"[{time.strftime('%H:%M:%S')}] X Monitor: Deep Scan complete. Discovered {len(unique_topics)} new social leads.")
     
     try:
         from .. import status_manager
         if unique_topics:
             status_manager.update_agent_status(
                 "The Watchtower", 
-                "News Monitor", 
+                "Social Monitor", 
                 "Active", 
-                f"identified {len(unique_topics)} potential leads from X."
+                f"Discovered {len(unique_topics)} new leads from Deep Scan."
             )
         else:
             status_manager.update_agent_status(
                 "The Watchtower", 
-                "News Monitor", 
+                "Social Monitor", 
                 "Idle", 
-                f"Waiting for next scan cycle... (Found 0 topics)"
+                f"Scan complete. No new leads found."
             )
     except ImportError:
         pass
