@@ -41,11 +41,23 @@ class MemoryManager:
         if url in self.memory["seen_urls"]:
             return True
             
-        # Check Title (fuzzy matching could be added here, but exact for now)
+        # Check Title (Exact)
         if title in self.memory["seen_titles"]:
             return True
             
+        # Check Title (Fuzzy)
+        # Check against last 200 titles for performance
+        recent_titles = self.memory["seen_titles"][-200:]
+        for seen_title in recent_titles:
+            if self.is_similar(title, seen_title):
+                # print(f"Memory: '{title[:30]}...' is similar to '{seen_title[:30]}...'")
+                return True
+            
         return False
+
+    def is_similar(self, a, b, threshold=0.85):
+        import difflib
+        return difflib.SequenceMatcher(None, a, b).ratio() > threshold
 
     def add(self, url, title):
         if url and url not in self.memory["seen_urls"]:

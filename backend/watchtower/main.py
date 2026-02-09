@@ -14,6 +14,7 @@ from backend.writer import publisher
 from backend.writer import publisher
 from backend.watchtower import trend_spotter
 from backend import status_manager
+from backend import maintainer
 
 CATEGORIES_LIST = [
     "World", "Politics", "Business", "Tech", "Startups", "Science", "Opinion"
@@ -79,6 +80,13 @@ def job():
             
             # 7. Save Raw Data
             storage.update_category_news(category, articles)
+            
+            # 8. Run Maintainer (Cleanup & Image Fixes)
+            print(f"[{time.strftime('%H:%M:%S')}] Maintainer: Running maintenance...")
+            try:
+                maintainer.run_maintainer()
+            except Exception as e:
+                print(f"Maintainer failed: {e}")
         else:
             print(f"No articles found for {category}.")
             # Even if empty, we might want to clear old data for this category?

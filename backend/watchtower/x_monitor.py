@@ -25,6 +25,35 @@ BUSINESS_SOURCES = [
     "marketwatch.com", "finance.yahoo.com"
 ]
 
+def clean_url(url):
+    """
+    Strips query parameters (utm_*, ref_*, etc.) to prevent duplicates.
+    """
+    if "?" in url:
+        return url.split("?")[0]
+    return url
+
+def is_valid_topic_url(url):
+    """
+    Filters out generic profile pages and irrelevant links.
+    """
+    url = url.lower()
+    
+    # 1. Twitter/X specific rules
+    if "twitter.com" in url or "x.com" in url:
+        # Must be a status (tweet), not a profile
+        if "/status/" not in url:
+            return False
+            
+    # 2. General exclusions
+    if "login" in url or "signup" in url or "signin" in url:
+        return False
+        
+    if "wikipedia.org" in url:
+        return False
+        
+    return True
+
 def get_business_signals():
     """
     Specifically looks for "Money" news: Deals, Earnings, Mergers, Markets.
@@ -60,6 +89,13 @@ def get_business_signals():
                     content = f"{title}: {body}"
                     
                     if len(content) > 30:
+                        # Clean href
+                        href = clean_url(href)
+                        
+                        # Validate URL
+                        if not is_valid_topic_url(href):
+                            continue
+                            
                         # MEMORY CHECK
                         if not memory.is_seen(href, title):
                             topics.append({
@@ -118,8 +154,9 @@ def get_x_topics():
                 selected_sources = random.sample(LEGIT_SOURCES, k=5)
                 
                 for source in selected_sources:
-                    query = f"site:twitter.com/{source}"
-                    print(f"  - Checking @{source} via DDG...")
+                    # Switch to news search as site:twitter.com is unreliable for recent results
+                    query = f'"{source}" news -site:wikipedia.org'
+                    print(f"  - Checking news about {source} via DDG...")
                     
                     # Update status for granular feedback
                     try:
@@ -157,12 +194,20 @@ def get_x_topics():
                         content = content.replace(" on Twitter", "").replace(" on X", "")
                         
                         if len(content) > 30:
+                            # Clean href
+                            href = clean_url(href)
+                            
+                            # Validate URL
+                            if not is_valid_topic_url(href):
+                                # print(f"    - Skipping invalid URL: {href}")
+                                continue
+                                
                             # MEMORY CHECK
                             if not memory.is_seen(href, title):
                                 topics.append({
                                     "text": content[:200] + "...",
                                     "url": href,
-                                    "source": f"X (@{source})"
+                                    "source": f"News about {source}"
                                 })
                                 # Add to memory immediately to prevent duplicates in same batch
                                 memory.add(href, title)
@@ -171,7 +216,7 @@ def get_x_topics():
                             
                 except Exception as e:
                     if "No results" in str(e):
-                        print(f"    - No results for @{source}")
+                        print(f"    - No results for news about {source}")
                     else:
                         print(f"    Error checking {source}: {e}")
                     
