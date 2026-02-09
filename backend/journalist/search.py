@@ -13,7 +13,7 @@ ssl._create_default_https_context = create_ssl_context
 
 def search_topic(query):
     """
-    Searches for a topic using DuckDuckGo.
+    Searches for a topic using DuckDuckGo News.
     Returns a list of results (url, content, score).
     """
     print(f"Journalist: Searching for '{query}'...")
@@ -23,16 +23,19 @@ def search_topic(query):
     for attempt in range(max_retries):
         try:
             with DDGS(timeout=20) as ddgs:
-                # max_results=5 to match previous behavior
-                ddg_results = list(ddgs.text(query, max_results=5))
+                # Use ddgs.news() for better quality news results
+                # max_results=10 to get a good candidate pool
+                ddg_results = list(ddgs.news(query, max_results=10, timelimit='d'))
                 
                 for r in ddg_results:
-                    # normalize to match previous Tavily structure approximately
+                    # DDG News returns: {'date', 'title', 'body', 'url', 'image', 'source'}
                     results.append({
-                        "url": r.get('href', ''),
-                        "content": r.get('body', ''),
-                        "score": 1.0, # Dummy score as DDG doesn't provide it
-                        "title": r.get('title', '') # preserving title if useful
+                        "url": r.get('url', ''),
+                        "content": r.get('body', ''), # body is the snippet
+                        "score": 1.0, 
+                        "title": r.get('title', ''),
+                        "source": r.get('source', ''),
+                        "published": r.get('date', '')
                     })
                     
             if results:

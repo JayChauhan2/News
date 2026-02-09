@@ -154,9 +154,9 @@ def get_x_topics():
                 selected_sources = random.sample(LEGIT_SOURCES, k=5)
                 
                 for source in selected_sources:
-                    # Switch to news search as site:twitter.com is unreliable for recent results
-                    query = f'"{source}" news -site:wikipedia.org'
-                    print(f"  - Checking news about {source} via DDG...")
+                    # Use the source name directly for news search
+                    query = f'"{source}"'
+                    print(f"  - Checking news about {source} via DDG News...")
                     
                     # Update status for granular feedback
                     try:
@@ -165,60 +165,55 @@ def get_x_topics():
                             "The Watchtower", 
                             "News Monitor", 
                             "Scanning", 
-                            f"Analyzing recent tweets from @{source}..."
+                            f"Analyzing recent news about {source}..."
                         )
                     except ImportError:
                         pass 
                 
-                try:
-                    # Try with daily limit first
                     try:
-                        results = list(ddgs.text(query, max_results=3, timelimit='d'))
-                    except Exception:
-                        results = []
+                        # Use ddgs.news() instead of text()
+                        try:
+                            # timelimit='d' ensures last 24h
+                            results = list(ddgs.news(query, max_results=5, timelimit='d'))
+                        except Exception:
+                            results = []
 
-                    # REMOVED FALLBACK: Do NOT search without time limit.
-                    # if not results:
-                    #      time.sleep(1)
-                    #      results = list(ddgs.text(query, max_results=3))
-                    
-                    for r in results:
-                        title = r.get('title', '')
-                        body = r.get('body', '')
-                        href = r.get('href', '')
-                        
-                        # Heuristic: Extract useful parts from the snippet
-                        content = f"{title} {body}"
-                        
-                        # Clean up common noise
-                        content = content.replace(" on Twitter", "").replace(" on X", "")
-                        
-                        if len(content) > 30:
-                            # Clean href
-                            href = clean_url(href)
+                        for r in results:
+                            title = r.get('title', '')
+                            body = r.get('body', '')
+                            href = r.get('url', '') # news() uses 'url', not 'href'
+                            source_name = r.get('source', '')
                             
-                            # Validate URL
-                            if not is_valid_topic_url(href):
-                                # print(f"    - Skipping invalid URL: {href}")
-                                continue
+                            # Heuristic: Extract useful parts from the snippet
+                            content = f"{title} {body}"
+                            
+                            if len(content) > 30:
+                                # Clean href
+                                href = clean_url(href)
                                 
-                            # MEMORY CHECK
-                            if not memory.is_seen(href, title):
-                                topics.append({
-                                    "text": content[:200] + "...",
-                                    "url": href,
-                                    "source": f"News about {source}"
-                                })
-                                # Add to memory immediately to prevent duplicates in same batch
-                                memory.add(href, title)
-                            else:
-                                print(f"    - Skipping known topic: {title[:30]}...")
+                                # Validate URL
+                                if not is_valid_topic_url(href):
+                                    # print(f"    - Skipping invalid URL: {href}")
+                                    continue
+                                    
+                                # MEMORY CHECK
+                                if not memory.is_seen(href, title):
+                                    topics.append({
+                                        "text": content[:200] + "...",
+                                        "url": href,
+                                        "source": f"News: {source_name}"
+                                    })
+                                    # Add to memory immediately to prevent duplicates in same batch
+                                    memory.add(href, title)
+                                else:
+                                    # print(f"    - Skipping known topic: {title[:30]}...")
+                                    pass
                             
-                except Exception as e:
-                    if "No results" in str(e):
-                        print(f"    - No results for news about {source}")
-                    else:
-                        print(f"    Error checking {source}: {e}")
+                    except Exception as e:
+                        if "No results" in str(e):
+                            print(f"    - No results for news about {source}")
+                        else:
+                            print(f"    Error checking {source}: {e}")
                     
         except Exception as e:
             print(f"X Monitor: Critical error initializing DDG: {e}")

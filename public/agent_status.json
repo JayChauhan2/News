@@ -2,29 +2,29 @@
   {
     "name": "The Watchtower",
     "role": "News Monitor",
-    "status": "Scanning",
-    "current_assignment": "Analyzing recent tweets from @NASA...",
-    "last_updated": "2026-02-09T06:30:16.079111"
+    "status": "Filtering",
+    "current_assignment": "Filtering 13 articles in Tech...",
+    "last_updated": "2026-02-09T18:11:35.080099"
   },
   {
     "name": "The Chief Editor",
     "role": "Editor-in-Chief",
-    "status": "Assigning",
-    "current_assignment": "Reviewing scored stories for assignment...",
-    "last_updated": "2026-02-09T06:26:51.376050"
+    "status": "Scoring",
+    "current_assignment": "Evaluating editorial value of: The Political Battle for AI in Space Wil...",
+    "last_updated": "2026-02-09T18:11:51.760425"
   },
   {
     "name": "The Investigative Journalist",
     "role": "Journalist",
     "status": "Idle",
     "current_assignment": "Waiting for leads...",
-    "last_updated": "2026-02-09T06:26:58.883389"
+    "last_updated": "2026-02-09T18:11:32.472110"
   },
   {
     "name": "The Senior Reporter",
     "role": "Journalist",
     "status": "Idle",
     "current_assignment": "Waiting for new assignments...",
-    "last_updated": "2026-02-09T16:36:26.612017"
+    "last_updated": "2026-02-09T18:11:52.089253"
   }
 ]
