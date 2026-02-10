@@ -1,30 +1,30 @@
 [
   {
     "name": "The Watchtower",
-    "role": "News Monitor",
-    "status": "Filtering",
-    "current_assignment": "Filtering 2 articles in Business...",
-    "last_updated": "2026-02-09T18:32:13.819057"
+    "role": "Social Monitor",
+    "status": "Deep Scan",
+    "current_assignment": "Checking @TheVerge (11/17)...",
+    "last_updated": "2026-02-09T20:16:17.740653"
   },
   {
     "name": "The Chief Editor",
     "role": "Editor-in-Chief",
     "status": "Assigning",
     "current_assignment": "Reviewing scored stories for assignment...",
-    "last_updated": "2026-02-09T18:33:25.545089"
+    "last_updated": "2026-02-09T18:48:54.328440"
   },
   {
     "name": "The Investigative Journalist",
     "role": "Journalist",
     "status": "Thinking",
     "current_assignment": "Formulating investigation strategy...",
-    "last_updated": "2026-02-09T18:33:34.309833"
+    "last_updated": "2026-02-09T18:49:08.343859"
   },
   {
     "name": "The Senior Reporter",
     "role": "Journalist",
-    "status": "Drafting",
-    "current_assignment": "Writing article about: Alphabet highlights new AI-rel...",
-    "last_updated": "2026-02-09T18:35:29.773752"
+    "status": "Idle",
+    "current_assignment": "Waiting for new assignments...",
+    "last_updated": "2026-02-09T20:16:32.509318"
   }
 ]
