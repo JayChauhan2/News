@@ -77,6 +77,11 @@ def process_assignments():
         angle_rationale = angle_data.get("rationale", "")
         primary_queries = angle_data.get("search_queries", [f"{ticket['title']} official statement"])
         
+        # Enforce "No News" policy in search to find primary sources
+        # We want to find official pages, forums, or niche blogs, not NYT/CNN summaries.
+        exclusion = " -site:nytimes.com -site:cnn.com -site:bbc.com -site:reuters.com -site:bloomberg.com -site:cnbc.com -site:theverge.com -site:techcrunch.com"
+        primary_queries = [q + exclusion for q in primary_queries]
+        
         print(f"Journalist: Angle selected: {angle}")
         
         # --- Step 3: Targeted Search (Primary Sources) ---

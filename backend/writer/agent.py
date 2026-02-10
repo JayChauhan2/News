@@ -67,26 +67,22 @@ def write_article(dossier, style="WITTY"):
         # Append source link
         source_url = dossier.get('source_link')
         
-        # If no direct source link (or if it's just a generic twitter home link), try to find a better primary source from search results
-        if (not source_url or "twitter.com" in source_url) and dossier.get('search_results'):
-            # Try to find a non-news, primary source (e.g. .gov, .edu, or official company blog)
-            best_source = None
+        if source_url:
+             result['content'] += f"\n\n[Primary Source]({source_url})"
+
+        # If we have search results, add a supporting link (e.g. official blog) if it's different
+        if dossier.get('search_results'):
+            best_supporting = None
             for res in dossier['search_results']:
                 url = res.get('url', '')
-                # Prioritize official domains
-                if '.gov' in url or '.edu' in url or 'blog' in url or 'press' in url:
-                    best_source = url
-                    break
-                
-                # Avoid known news aggregators if possible
-                if not any(x in url for x in ['nytimes', 'cnn', 'bbc', 'reuters', 'bloomberg', 'cnbc', 'theverge']):
-                     if not best_source:
-                         best_source = url
+                if url != source_url:
+                    # Prioritize official domains for supporting context
+                    if '.gov' in url or '.edu' in url or 'blog' in url or 'press' in url:
+                        best_supporting = url
+                        break
             
-            if best_source:
-                source_url = best_source
-            elif not source_url and dossier['search_results']:
-                 source_url = dossier['search_results'][0].get('url')
+            if best_supporting:
+                 result['content'] += f"\n[Supporting Context]({best_supporting})"
         
         if source_url:
             result['content'] += f"\n\n[Primary Source]({source_url})"

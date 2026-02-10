@@ -3,8 +3,8 @@
     "name": "The Watchtower",
     "role": "Social Monitor",
     "status": "Deep Scan",
-    "current_assignment": "Checking @WSJ (2/17)...",
-    "last_updated": "2026-02-10T05:06:05.289376"
+    "current_assignment": "Checking @TechCrunch (6/17)...",
+    "last_updated": "2026-02-10T05:12:43.672357"
   },
   {
     "name": "The Chief Editor",
@@ -25,6 +25,6 @@
     "role": "Journalist",
     "status": "Idle",
     "current_assignment": "Waiting for new assignments...",
-    "last_updated": "2026-02-10T05:06:34.327393"
+    "last_updated": "2026-02-10T05:14:04.672204"
   }
 ]
