@@ -261,7 +261,11 @@ def get_x_topics():
                             "source": f"Post by {source}"
                         })
                         memory.add(href, content[:50])
-                        print(f"    + Found lead: {content[:40]}...")
+                        
+                        # --- USER REQUESTED PRINT ---
+                        print(f"\n    [+] FOUND LEAD from @{source}:")
+                        print(f"        \"{content[:150]}...\"")
+                        print(f"        Link: {href}\n")
                     else:
                         # print(f"    - Skipping known: {content[:30]}...")
                         pass
