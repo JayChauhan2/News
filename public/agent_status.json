@@ -3,28 +3,28 @@
     "name": "The Watchtower",
     "role": "Social Monitor",
     "status": "Deep Scan",
-    "current_assignment": "Checking @blakehounshell (3/28)...",
-    "last_updated": "2026-02-10T05:37:58.176612"
+    "current_assignment": "Checking @GoogleAI (20/28)...",
+    "last_updated": "2026-02-10T06:38:17.836776"
   },
   {
     "name": "The Chief Editor",
     "role": "Editor-in-Chief",
     "status": "Assigning",
     "current_assignment": "Reviewing scored stories for assignment...",
-    "last_updated": "2026-02-10T04:35:50.064103"
+    "last_updated": "2026-02-10T06:32:10.836724"
   },
   {
     "name": "The Investigative Journalist",
     "role": "Journalist",
-    "status": "Idle",
-    "current_assignment": "Waiting for leads...",
-    "last_updated": "2026-02-10T04:36:08.981122"
+    "status": "Thinking",
+    "current_assignment": "Formulating investigation strategy...",
+    "last_updated": "2026-02-10T06:32:28.351007"
   },
   {
     "name": "The Senior Reporter",
     "role": "Journalist",
     "status": "Idle",
     "current_assignment": "Waiting for new assignments...",
-    "last_updated": "2026-02-10T05:38:15.437826"
+    "last_updated": "2026-02-10T06:39:26.870635"
   }
 ]
