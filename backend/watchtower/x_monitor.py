@@ -14,14 +14,35 @@ from .memory_manager import MemoryManager
 # Override default SSL context creation
 ssl._create_default_https_context = create_ssl_context
 
-# List of legitimate news sources and personalities on X
-LEGIT_SOURCES = [
-    "Reuters", "AP", "BBCBreaking", "CNN", "TechCrunch", "TheVerge", "WSJ", "Bloomberg", "nytimes",
-    "elonmusk", "sama", "paulg", "ycombinator", "NASA", "SpaceX", "GoogleAI", "OpenAI"
+# --- SOURCE LISTS ---
+
+# Political & Civic Commentary
+POLITICS_SOURCES = [
+    "DeItaone", "Acyn", "MeidasTouch", "SawyerMerritt"
 ]
 
-BUSINESS_SOURCES = [
-    "cnbc.com", "reuters.com", "bloomberg.com", "wsj.com", "ft.com", 
+# Tech & Innovation News
+TECH_SOURCES = [
+    "Techmeme", "TechCrunch", "BetaKit", "emilychangtv", "BITech", "AndrewYNg",
+    "TheVerge", "ycombinator", "paulg", "sama", "GoogleAI", "OpenAI"
+]
+
+# Markets / Finance Signals
+FINANCE_SOURCES = [
+    "BrianFeroldi", "morganhousel", "LizAnnSonders", "awealthofcs",
+    "fluentinfinance", "ripster47", "Mr_Derivatives"
+]
+
+# Specialized & Analytical (Science, Space, Policy)
+SPECIALIZED_SOURCES = [
+    "blakehounshell", "dandrezner", "NASA", "SpaceX", "elonmusk" 
+]
+
+# Combined List for Deep Scan
+LEGIT_SOURCES = POLITICS_SOURCES + TECH_SOURCES + FINANCE_SOURCES + SPECIALIZED_SOURCES
+
+# Business/Finance specific domains for secondary checks
+BUSINESS_DOMAINS = [ # DO NOT INCLUDE OFFICIAL NEWS OUTLETS HERE
     "marketwatch.com", "finance.yahoo.com"
 ]
 
@@ -65,7 +86,7 @@ def get_business_signals():
         with DDGS(verify=False, timeout=20) as ddgs:
             # Construct a powerful query
             # (earnings OR deal OR merger) (site:cnbc.com OR site:reuters.com ...)
-            sites = " OR ".join([f"site:{s}" for s in BUSINESS_SOURCES])
+            sites = " OR ".join([f"site:{s}" for s in BUSINESS_DOMAINS])
             query = f"(earnings OR acquisition OR merger OR revenue) ({sites})"
             
             print(f"  - Searching Business News via DDG...")
