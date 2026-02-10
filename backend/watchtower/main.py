@@ -1,7 +1,7 @@
 import schedule
 import time
-import sources
-import storage
+from . import sources
+from . import storage
 import sys
 import os
 

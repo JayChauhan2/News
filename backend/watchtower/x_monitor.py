@@ -149,9 +149,9 @@ def get_x_topics():
 
     for i, source in enumerate(sources_to_scan):
         try:
-            # Polite delay to avoid aggressive rate limiting since we are scanning many
+            # Polite delay to avoid aggressive rate limiting
             if i > 0:
-                time.sleep(3) 
+                time.sleep(5) 
 
             # Construct query for SPECIFIC tweets/statuses
             # site:x.com "Source Name" /status/
@@ -172,91 +172,99 @@ def get_x_topics():
                 pass 
         
             results = []
-            try:
-                with DDGS(verify=False, timeout=20) as ddgs:
-                    # Attempt 1: Last 24 hours (preferred)
-                    try:
-                        results = list(ddgs.text(query, max_results=5, timelimit='d'))
-                    except Exception as e:
-                        if "No results" not in str(e):
-                            print(f"    Error (24h): {e}")
-                        # If no results, results remains empty
-
-                    # Attempt 2: Last Week (fallback if strictly no results)
-                    if not results:
-                        # print(f"    - No 24h results, trying last week...")
+            
+            # Retry loop for connection stability
+            max_retries = 2
+            for attempt in range(max_retries + 1):
+                try:
+                    # Re-enable verify=False as it sometimes helps with timeouts/handshakes
+                    with DDGS(verify=False, timeout=45) as ddgs:
+                        # Attempt 1: Last 24 hours (preferred)
                         try:
-                            results = list(ddgs.text(query, max_results=5, timelimit='w'))
+                            results = list(ddgs.text(query, max_results=5, timelimit='d'))
                         except Exception as e:
-                            pass
-                            
-                    # Attempt 3: No Timelimit (Last Resort)
-                    if not results:
-                        # print(f"    - No recent results, trying broad search...")
-                        try:
-                            results = list(ddgs.text(query, max_results=5, timelimit=None))
-                        except Exception as e:
-                            pass
+                            pass # Silent fail to try next fallback
 
-                for r in results:
-                    title = r.get('title', '')
-                    body = r.get('body', '')
-                    href = r.get('href', '')
+                        # Attempt 2: Last Week (fallback if strictly no results)
+                        if not results:
+                            try:
+                                results = list(ddgs.text(query, max_results=5, timelimit='w'))
+                            except Exception as e:
+                                pass
+                                
+                        # Attempt 3: No Timelimit (Last Resort)
+                        if not results:
+                            try:
+                                results = list(ddgs.text(query, max_results=5, timelimit=None))
+                            except Exception as e:
+                                pass
                     
-                    # Validate URL - must be a status
-                    if "/status/" not in href:
-                        continue
-                        
-                    # Heuristic: Extract useful info
-                    # DDG often puts the tweet text in the TITLE for status pages
-                    # e.g. "Elon Musk on X: 'This is the tweet text'"
-                    # Body is often generic "The latest posts from..."
+                    # If we got here without crashing, break the retry loop
+                    break
                     
-                    clean_title = title.split(" on X:")[0].split(" on Twitter:")[0]
-                    if '"' in title and "on X" in title:
-                         # Extract text inside quotes if possible, or just take the whole title minus "on X"
-                         # Actually, standard format is: Name (@handle) on X: "Tweet Text"
-                         parts = title.split("on X: ")
-                         if len(parts) > 1:
-                             clean_title = parts[1].strip('"')
-                         else:
-                             parts = title.split("on Twitter: ")
-                             if len(parts) > 1:
-                                 clean_title = parts[1].strip('"')
-
-                    content = clean_title
-                    if len(content) < 10 or "latest posts" in content.lower():
-                         content = body
+                except Exception as e:
+                    print(f"    Error checking {source} (Attempt {attempt+1}/{max_retries+1}): {e}")
+                    if attempt < max_retries:
+                        time.sleep(10) # Backoff
                     else:
-                         content = f"{clean_title} - {body[:50]}..."
+                        print(f"    Failed to scan {source} after retries.")
 
-                    # Filter out known bad patterns (Twitter error pages, generic descriptions)
-                    if "something went wrong" in content.lower() or "latest posts from" in content.lower():
-                        # print(f"    - Skipping bad content: {content[:30]}...")
-                        continue
-
-                    # If using No Timelimit, try to filter out very old stuff if possible
-                    # But for now, we prioritize GETTING leads over missing them.
+            for r in results:
+                title = r.get('title', '')
+                body = r.get('body', '')
+                href = r.get('href', '')
+                
+                # Validate URL - must be a status
+                if "/status/" not in href:
+                    continue
                     
-                    if len(content) > 10:
-                        # Clean href
-                        href = clean_url(href)
-                        
-                        # MEMORY CHECK
-                        if not memory.is_seen(href, content[:50]): # Use content start as approximate key
-                            topics.append({
-                                "text": content, # potentially limited length
-                                "url": href,
-                                "source": f"Post by {source}"
-                            })
-                            memory.add(href, content[:50])
-                            print(f"    + Found lead: {content[:40]}...")
+                # Heuristic: Extract useful info
+                # DDG often puts the tweet text in the TITLE for status pages
+                # e.g. "Elon Musk on X: 'This is the tweet text'"
+                # Body is often generic "The latest posts from..."
+                
+                clean_title = title.split(" on X:")[0].split(" on Twitter:")[0]
+                if '"' in title and "on X" in title:
+                        # Extract text inside quotes if possible, or just take the whole title minus "on X"
+                        # Actually, standard format is: Name (@handle) on X: "Tweet Text"
+                        parts = title.split("on X: ")
+                        if len(parts) > 1:
+                            clean_title = parts[1].strip('"')
                         else:
-                            # print(f"    - Skipping known: {content[:30]}...")
-                            pass
+                            parts = title.split("on Twitter: ")
+                            if len(parts) > 1:
+                                clean_title = parts[1].strip('"')
+
+                content = clean_title
+                if len(content) < 10 or "latest posts" in content.lower():
+                        content = body
+                else:
+                        content = f"{clean_title} - {body[:50]}..."
+
+                # Filter out known bad patterns (Twitter error pages, generic descriptions)
+                if "something went wrong" in content.lower() or "latest posts from" in content.lower():
+                    # print(f"    - Skipping bad content: {content[:30]}...")
+                    continue
+
+                # If using No Timelimit, try to filter out very old stuff if possible
+                # But for now, we prioritize GETTING leads over missing them.
+                
+                if len(content) > 10:
+                    # Clean href
+                    href = clean_url(href)
                     
-            except Exception as e:
-                 print(f"X Monitor: Critical error scanning {source}: {e}")
+                    # MEMORY CHECK
+                    if not memory.is_seen(href, content[:50]): # Use content start as approximate key
+                        topics.append({
+                            "text": content, # potentially limited length
+                            "url": href,
+                            "source": f"Post by {source}"
+                        })
+                        memory.add(href, content[:50])
+                        print(f"    + Found lead: {content[:40]}...")
+                    else:
+                        # print(f"    - Skipping known: {content[:30]}...")
+                        pass
             
         except Exception as e:
             print(f"X Monitor: Critical error scanning {source}: {e}")
