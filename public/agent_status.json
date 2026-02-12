@@ -2,9 +2,9 @@
   {
     "name": "The Watchtower",
     "role": "Social Monitor",
-    "status": "Deep Scan",
-    "current_assignment": "Checking @GoogleAI (20/28)...",
-    "last_updated": "2026-02-10T06:38:17.836776"
+    "status": "Idle",
+    "current_assignment": "Scan complete. No new leads found.",
+    "last_updated": "2026-02-12T18:59:14.438857"
   },
   {
     "name": "The Chief Editor",
@@ -18,13 +18,13 @@
     "role": "Journalist",
     "status": "Thinking",
     "current_assignment": "Formulating investigation strategy...",
-    "last_updated": "2026-02-10T06:32:28.351007"
+    "last_updated": "2026-02-12T18:59:14.439972"
   },
   {
     "name": "The Senior Reporter",
     "role": "Journalist",
     "status": "Idle",
     "current_assignment": "Waiting for new assignments...",
-    "last_updated": "2026-02-12T18:39:30.228350"
+    "last_updated": "2026-02-12T18:59:22.331335"
   }
 ]

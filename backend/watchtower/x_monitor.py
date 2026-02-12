@@ -17,30 +17,13 @@ ssl._create_default_https_context = create_ssl_context
 
 # --- SOURCE LISTS ---
 
-# Political & Civic Commentary
-POLITICS_SOURCES = [
-    "DeItaone", "Acyn", "MeidasTouch", "SawyerMerritt"
+# Target Subreddits for Social News
+SUBREDDITS = [
+    "worldnews", "news", "UpliftingNews", # General News
+    "technology", "futurology", "gadgets", "artificial", # Tech
+    "investing", "StockMarket", "economics", # Finance
+    "space", "science" # Science
 ]
-
-# Tech & Innovation News
-TECH_SOURCES = [
-    "Techmeme", "TechCrunch", "BetaKit", "emilychangtv", "BITech", "AndrewYNg",
-    "TheVerge", "ycombinator", "paulg", "sama", "GoogleAI", "OpenAI"
-]
-
-# Markets / Finance Signals
-FINANCE_SOURCES = [
-    "BrianFeroldi", "morganhousel", "LizAnnSonders", "awealthofcs",
-    "fluentinfinance", "ripster47", "Mr_Derivatives"
-]
-
-# Specialized & Analytical (Science, Space, Policy)
-SPECIALIZED_SOURCES = [
-    "blakehounshell", "dandrezner", "NASA", "SpaceX", "elonmusk" 
-]
-
-# Combined List for Deep Scan
-LEGIT_SOURCES = POLITICS_SOURCES + TECH_SOURCES + FINANCE_SOURCES + SPECIALIZED_SOURCES
 
 # Business/Finance specific domains for secondary checks
 BUSINESS_DOMAINS = [ # DO NOT INCLUDE OFFICIAL NEWS OUTLETS HERE
@@ -61,10 +44,10 @@ def is_valid_topic_url(url):
     """
     url = url.lower()
     
-    # 1. Twitter/X specific rules
-    if "twitter.com" in url or "x.com" in url:
-        # Must be a status (tweet), not a profile
-        if "/status/" not in url:
+    # 1. Reddit specific rules
+    if "reddit.com" in url:
+        # Must be a comments page (post), not a user or subreddit root
+        if "/comments/" not in url:
             return False
             
     # 2. General exclusions
@@ -81,7 +64,7 @@ def get_business_signals():
     Specifically looks for "Money" news: Deals, Earnings, Mergers, Markets.
     """
     topics = []
-    print(f"[{time.strftime('%H:%M:%S')}] X Monitor: Scanning BUSINESS sources (Direct News)...")
+    print(f"[{time.strftime('%H:%M:%S')}] Watchtower: Scanning BUSINESS sources (Direct News)...")
     
     try:
         with DDGS(verify=False, timeout=20) as ddgs:
@@ -133,10 +116,7 @@ def get_business_signals():
                 print(f"    Error in business search: {e}")
 
     except Exception as e:
-        print(f"X Monitor: Business scan error: {e}")
-
-    except Exception as e:
-        print(f"X Monitor: Business scan error: {e}")
+        print(f"Watchtower: Business scan error: {e}")
 
     # Deduplicate
     seen_texts = set()
@@ -146,40 +126,41 @@ def get_business_signals():
             unique_topics.append(t)
             seen_texts.add(t['text'])
             
-    print(f"[{time.strftime('%H:%M:%S')}] X Monitor: Found {len(unique_topics)} BUSINESS leads.")
+    print(f"[{time.strftime('%H:%M:%S')}] Watchtower: Found {len(unique_topics)} BUSINESS leads.")
     return unique_topics
 
-def get_x_topics():
+def get_social_topics():
     """
-    Scans X (Twitter) for recent posts from key accounts using twscrape (authenticated).
+    Scans Reddit for accurate headlines from key subreddits.
+    Replaces the old 'get_x_topics' logic.
     """
     topics = []
-    print(f"[{time.strftime('%H:%M:%S')}] X Monitor: Starting Deep Scan of top sources via twscrape...")
+    print(f"[{time.strftime('%H:%M:%S')}] Watchtower: Starting Reddit Scan...")
     
     # Initialize Memory
     memory = MemoryManager()
     
     unique_topics = []
     
-    # Shuffle sources to vary the order/load
-    sources_to_scan = LEGIT_SOURCES.copy()
-    random.shuffle(sources_to_scan)
+    # Shuffle to vary
+    subs_to_scan = SUBREDDITS.copy()
+    random.shuffle(subs_to_scan)
     
-    print(f"[{time.strftime('%H:%M:%S')}] X Monitor: {len(sources_to_scan)} sources queued for scanning.")
+    print(f"[{time.strftime('%H:%M:%S')}] Watchtower: {len(subs_to_scan)} subreddits queued.")
 
     try:
-        from .x_scraper import get_bulk_tweets
+        from .reddit_scraper import get_reddit_headlines
         
         # Run the async scraper
-        print(f"[{time.strftime('%H:%M:%S')}] X Monitor: logging in and fetching tweets...")
-        raw_tweets = asyncio.run(get_bulk_tweets(sources_to_scan, limit=3))
+        print(f"[{time.strftime('%H:%M:%S')}] Watchtower: fetching headlines...")
+        raw_headlines = asyncio.run(get_reddit_headlines(subs_to_scan, limit=3))
         
-        print(f"[{time.strftime('%H:%M:%S')}] X Monitor: Fetched {len(raw_tweets)} raw tweets.")
+        print(f"[{time.strftime('%H:%M:%S')}] Watchtower: Fetched {len(raw_headlines)} raw headlines.")
         
-        for tweet in raw_tweets:
-            text = tweet.get('text', '')
-            url = tweet.get('url', '')
-            source_label = tweet.get('source', 'X')
+        for item in raw_headlines:
+            text = item.get('text', '')
+            url = item.get('url', '')
+            source_label = item.get('source', 'Reddit')
             
             # MEMORY CHECK
             # Use text[:50] as partial key, or url if unique
@@ -196,8 +177,7 @@ def get_x_topics():
                 pass
                 
     except Exception as e:
-        print(f"X Monitor: Critical error in twscrape scan: {e}")
-        print("Note: Ensure accounts are added via 'python backend/add_twitter_account.py'")
+        print(f"Watchtower: Critical error in Reddit scan: {e}")
 
     # Deduplicate locally just in case
     seen_urls = set()
@@ -206,7 +186,7 @@ def get_x_topics():
             unique_topics.append(t)
             seen_urls.add(t['url'])
             
-    print(f"[{time.strftime('%H:%M:%S')}] X Monitor: Deep Scan complete. Discovered {len(unique_topics)} new social leads.")
+    print(f"[{time.strftime('%H:%M:%S')}] Watchtower: Scan complete. Discovered {len(unique_topics)} new social leads.")
     
     try:
         from .. import status_manager
@@ -231,12 +211,14 @@ def get_x_topics():
 
 if __name__ == "__main__":
     # Test run
-    # Mocking the relative import for direct execution
     import sys
     import os
     sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
     import status_manager
     
-    found = get_x_topics()
+    found = get_social_topics()
     for t in found:
         print(f"- {t}")
+
+# Backwards compatibility alias if needed by other modules temporarily
+get_x_topics = get_social_topics

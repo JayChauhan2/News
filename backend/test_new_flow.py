@@ -9,8 +9,8 @@ from backend.watchtower import trend_spotter
 import time
 
 def test_flow():
-    print("=== Testing X Monitor ===")
-    topics = x_monitor.get_x_topics()
+    print("=== Testing Social Monitor (Reddit) ===")
+    topics = x_monitor.get_social_topics()
     print(f"Result: {len(topics)} topics found.")
     for t in topics[:2]:
         print(f" - {t}")

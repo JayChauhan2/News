@@ -26,7 +26,7 @@ def fetch_social_news(category="Tech"):
         if category in ["Business", "Markets", "Economy", "Finance"]:
             x_leads = x_monitor.get_business_signals()
         else:
-            x_leads = x_monitor.get_x_topics()
+            x_leads = x_monitor.get_social_topics()
     except Exception as e:
         print(f"Error fetching X topics: {e}")
         return []
