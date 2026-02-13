@@ -22,8 +22,8 @@ def news_loop():
         except Exception as e:
             print(f"Main: Error in news loop: {e}")
         
-        print("Main: Sleeping for 15 minutes...")
-        time.sleep(900) # Run every 15 minutes
+        print("Main: Sleeping for 2 minutes...")
+        time.sleep(120) # Run every 2 minutes
 
 if __name__ == "__main__":
     # Start the news loop in a separate thread

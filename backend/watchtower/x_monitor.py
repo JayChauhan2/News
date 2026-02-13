@@ -18,17 +18,20 @@ ssl._create_default_https_context = create_ssl_context
 # --- SOURCE LISTS ---
 
 # Target Subreddits for Social News
-SUBREDDITS = [
-    "worldnews", "news", "UpliftingNews", # General News
-    "technology", "futurology", "gadgets", "artificial", # Tech
-    "investing", "StockMarket", "economics", # Finance
-    "space", "science" # Science
-]
+# Target Subreddits mapped by Category
+SUBREDDIT_MAP = {
+    "World": ["worldnews", "news", "UpliftingNews"],
+    "Tech": ["technology", "futurology", "gadgets", "artificial"],
+    "Business": ["investing", "StockMarket", "economics", "finance"],
+    "Science": ["space", "science", "EverythingScience"],
+    "Finance": ["investing", "StockMarket", "economics", "finance"], # Alias for Business
+    "Markets": ["StockMarket", "investing", "wallstreetbets"]       # Alias
+}
 
-# Business/Finance specific domains for secondary checks
-BUSINESS_DOMAINS = [ # DO NOT INCLUDE OFFICIAL NEWS OUTLETS HERE
-    "marketwatch.com", "finance.yahoo.com"
-]
+# Flatten for default "all" scan
+ALL_SUBREDDITS = [sub for sub_list in SUBREDDIT_MAP.values() for sub in sub_list]
+
+# BUSINESS_DOMAINS and get_business_signals removed to enforce social-only news.
 
 def clean_url(url):
     """
@@ -59,91 +62,28 @@ def is_valid_topic_url(url):
         
     return True
 
-def get_business_signals():
-    """
-    Specifically looks for "Money" news: Deals, Earnings, Mergers, Markets.
-    """
-    topics = []
-    print(f"[{time.strftime('%H:%M:%S')}] Watchtower: Scanning BUSINESS sources (Direct News)...")
-    
-    try:
-        with DDGS(verify=False, timeout=20) as ddgs:
-            # Construct a powerful query
-            # (earnings OR deal OR merger) (site:cnbc.com OR site:reuters.com ...)
-            sites = " OR ".join([f"site:{s}" for s in BUSINESS_DOMAINS])
-            query = f"(earnings OR acquisition OR merger OR revenue) ({sites})"
-            
-            print(f"  - Searching Business News via DDG...")
-            
-            # Initialize Memory
-            memory = MemoryManager()
-            
-            # Get results - Increased max_results to find new content if recent items are seen
-            try:
-                # timelimit='d' handles the time constraint
-                results = list(ddgs.text(query, max_results=25, timelimit='d'))
-                
-                for r in results:
-                    title = r.get('title', '')
-                    body = r.get('body', '')
-                    href = r.get('href', '')
-                    
-                    # Clean title
-                    title = title.split(" - ")[0].split(" | ")[0]
-                    
-                    content = f"{title}: {body}"
-                    
-                    if len(content) > 30:
-                        # Clean href
-                        href = clean_url(href)
-                        
-                        # Validate URL
-                        if not is_valid_topic_url(href):
-                            continue
-                            
-                        # MEMORY CHECK
-                        if not memory.is_seen(href, title):
-                            topics.append({
-                                "text": content[:300] + "...",
-                                "url": href,
-                                "source": "Business News"
-                            })
-                            memory.add(href, title)
-                        else:
-                            # print(f"    - Skipping known business topic: {title[:30]}...")
-                            pass
-            except Exception as e:
-                print(f"    Error in business search: {e}")
-
-    except Exception as e:
-        print(f"Watchtower: Business scan error: {e}")
-
-    # Deduplicate
-    seen_texts = set()
-    unique_topics = []
-    for t in topics:
-        if t['text'] not in seen_texts:
-            unique_topics.append(t)
-            seen_texts.add(t['text'])
-            
-    print(f"[{time.strftime('%H:%M:%S')}] Watchtower: Found {len(unique_topics)} BUSINESS leads.")
-    return unique_topics
-
-def get_social_topics():
+def get_social_topics(category=None):
     """
     Scans Reddit for accurate headlines from key subreddits.
     Replaces the old 'get_x_topics' logic.
     """
     topics = []
-    print(f"[{time.strftime('%H:%M:%S')}] Watchtower: Starting Reddit Scan...")
+    print(f"[{time.strftime('%H:%M:%S')}] Watchtower: Starting Reddit Scan for category: {category or 'ALL'}...")
     
     # Initialize Memory
     memory = MemoryManager()
     
     unique_topics = []
     
+    # Determine which subs to scan
+    subs_to_scan = []
+    if category and category in SUBREDDIT_MAP:
+        subs_to_scan = SUBREDDIT_MAP[category].copy()
+    else:
+        # Default to a random mix if no category or unknown
+        subs_to_scan = list(set(ALL_SUBREDDITS)) # Dedupe
+    
     # Shuffle to vary
-    subs_to_scan = SUBREDDITS.copy()
     random.shuffle(subs_to_scan)
     
     print(f"[{time.strftime('%H:%M:%S')}] Watchtower: {len(subs_to_scan)} subreddits queued.")

@@ -23,10 +23,9 @@ def fetch_social_news(category="Tech"):
     # but for now we'll take all valid leads.
     # but for now we'll take all valid leads.
     try:
-        if category in ["Business", "Markets", "Economy", "Finance"]:
-            x_leads = x_monitor.get_business_signals()
-        else:
-            x_leads = x_monitor.get_social_topics()
+        # FORCE SOCIAL SIGNALS FOR ALL CATEGORIES
+        # We no longer check traditional business news sources.
+        x_leads = x_monitor.get_social_topics(category=category)
     except Exception as e:
         print(f"Error fetching X topics: {e}")
         return []
