@@ -87,6 +87,20 @@ def startup_event():
     t = threading.Thread(target=run_publisher_loop, daemon=True)
     t.start()
 
+@app.delete("/articles/{article_id}")
+def delete_article(article_id: str):
+    articles = load_json(ARTICLES_FILE)
+    
+    # Filter out the article
+    new_articles = [a for a in articles if a.get('id') != article_id]
+    
+    if len(new_articles) < len(articles):
+        with open(ARTICLES_FILE, 'w') as f:
+            json.dump(new_articles, f, indent=2)
+        return {"status": "success", "message": f"Article {article_id} deleted"}
+    
+    return {"status": "error", "message": "Article not found"}
+
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=8001)

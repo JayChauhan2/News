@@ -43,3 +43,18 @@ export async function fetchAgentStatus() {
         return [];
     }
 }
+
+export async function deleteArticle(id) {
+    try {
+        const response = await fetch(`${API_BASE_URL}/articles/${id}`, {
+            method: 'DELETE',
+        });
+        if (!response.ok) {
+            throw new Error(`API error: ${response.status}`);
+        }
+        return true;
+    } catch (error) {
+        console.error("Failed to delete article:", error);
+        return false;
+    }
+}

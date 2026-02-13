@@ -1,7 +1,7 @@
 import React from 'react';
 import ArticleCard from './ArticleCard';
 
-export default function ArticleGrid({ articles }) {
+export default function ArticleGrid({ articles, onDelete }) {
     if (!articles || articles.length === 0) {
         return (
             <div className="py-20 text-center">
@@ -18,7 +18,7 @@ export default function ArticleGrid({ articles }) {
         <div className="py-12 px-6 container mx-auto">
             {/* Featured Section */}
             <section className="mb-16">
-                <ArticleCard article={featured} featured={true} />
+                <ArticleCard article={featured} featured={true} onDelete={onDelete} />
             </section>
 
             {/* Grid Section */}
@@ -30,7 +30,7 @@ export default function ArticleGrid({ articles }) {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-12">
                     {outputArticles.map(article => (
-                        <ArticleCard key={article.id} article={article} />
+                        <ArticleCard key={article.id} article={article} onDelete={onDelete} />
                     ))}
                 </div>
             </section>

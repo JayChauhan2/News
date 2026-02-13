@@ -1,14 +1,32 @@
 import React from 'react';
+
 import { Link } from 'react-router-dom';
-import { Clock } from 'lucide-react';
+import { Clock, Trash2 } from 'lucide-react';
 import { formatDate, formatRelativeTime } from '../utils/dateUtils';
 
-export default function ArticleCard({ article, featured = false }) {
+export default function ArticleCard({ article, featured = false, onDelete }) {
     if (!article) return null;
 
     return (
         <Link to={`/article/${article.id}`} className="group block h-full">
-            <article className={`h-full flex flex-col ${featured ? 'md:flex-row md:items-center md:gap-8' : ''}`}>
+            <article className={`h-full flex flex-col ${featured ? 'md:flex-row md:items-center md:gap-8' : ''} relative`}>
+
+                {/* Delete Button (Visible on Hover) */}
+                {onDelete && (
+                    <button
+                        onClick={(e) => {
+                            e.preventDefault(); // Stop navigation
+                            e.stopPropagation();
+                            if (window.confirm(`Are you sure you want to delete "${article.title || article.headline}"?`)) {
+                                onDelete(article.id);
+                            }
+                        }}
+                        className="absolute top-2 right-2 z-20 p-2 bg-white/90 rounded-full text-red-500 opacity-0 group-hover:opacity-100 transition-opacity hover:bg-white hover:text-red-600 shadow-sm"
+                        title="Delete Article"
+                    >
+                        <Trash2 size={16} />
+                    </button>
+                )}
 
                 {/* Image Container */}
                 <div className={`overflow-hidden rounded-2xl bg-slate-100 ${featured ? 'md:w-2/3 md:h-96' : 'h-56 mb-4'}`}>

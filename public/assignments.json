@@ -1,114 +1,74 @@
 [
   {
-    "id": "ticket_1770977069_4",
-    "title": "Ring owners are returning their cameras - here's how much you can get",
-    "source_link": "https://www.reddit.com/r/technology/comments/1r38l76/ring_owners_are_returning_their_cameras_heres_how/",
-    "category": "Tech",
-    "status": "pending",
-    "created_at": "2026-02-13 05:04:29"
-  },
-  {
-    "id": "ticket_1770977069_5",
-    "title": "1Password open sources a benchmark to stop AI agents from leaking credentials",
-    "source_link": "https://www.reddit.com/r/artificial/comments/1r3gbrx/1password_open_sources_a_benchmark_to_stop_ai/",
-    "category": "Tech",
-    "status": "pending",
-    "created_at": "2026-02-13 05:04:29"
-  },
-  {
-    "id": "ticket_1770977069_6",
-    "title": "Trump plans to roll back tariffs on metal and aluminium goods",
-    "source_link": "https://www.reddit.com/r/StockMarket/comments/1r3hj9l/trump_plans_to_roll_back_tariffs_on_metal_and/",
-    "category": "Business",
-    "status": "pending",
-    "created_at": "2026-02-13 05:04:29"
-  },
-  {
-    "id": "ticket_1770977069_7",
-    "title": "Global Markets in 2025 - Performance vs. Corruption",
-    "source_link": "https://www.reddit.com/r/StockMarket/comments/1r3hpjc/global_markets_in_2025_performance_vs_corruption/",
-    "category": "Business",
-    "status": "pending",
-    "created_at": "2026-02-13 05:04:29"
-  },
-  {
-    "id": "ticket_1770977069_8",
-    "title": "First time retail can buy OpenAI and Databricks before IPO? Ticker VCX listing March",
-    "source_link": "https://www.reddit.com/r/investing/comments/1r3kplf/first_time_retail_can_buy_openai_and_databricks/",
-    "category": "Business",
-    "status": "pending",
-    "created_at": "2026-02-13 05:04:29"
-  },
-  {
-    "id": "ticket_1770977069_9",
-    "title": "Market in red today. Time to not panic.",
-    "source_link": "https://www.reddit.com/r/investing/comments/1r30e3q/market_in_red_today_time_to_not_panic/",
-    "category": "Business",
-    "status": "pending",
-    "created_at": "2026-02-13 05:04:29"
-  },
-  {
-    "id": "ticket_1770977069_10",
-    "title": "Scientific journals place less trust in women researchers: An analysis of more than 36 million artic",
-    "source_link": "https://www.reddit.com/r/EverythingScience/comments/1r3cuh8/scientific_journals_place_less_trust_in_women/",
+    "id": "ticket_1771025554_14",
+    "title": "Ultra-processed foods in early childhood linked to lower IQ scores",
+    "source_link": "https://www.reddit.com/r/EverythingScience/comments/1r3r7qw/ultraprocessed_foods_in_early_childhood_linked_to/",
     "category": "Science",
     "status": "pending",
-    "created_at": "2026-02-13 05:04:29"
+    "created_at": "2026-02-13 18:32:34"
   },
   {
-    "id": "ticket_1770977069_11",
-    "title": "Teenager contracts rare 'welder's anthrax,' marking the ninth known case ever reported: A teenager [",
-    "source_link": "https://www.reddit.com/r/EverythingScience/comments/1r2ye3d/teenager_contracts_rare_welders_anthrax_marking/",
+    "id": "ticket_1771025554_15",
+    "title": "Toddlers eating high amounts of processed meats and sugary snacks at age 2 show lower IQ scores by a",
+    "source_link": "https://www.reddit.com/r/science/comments/1r3qgbb/toddlers_eating_high_amounts_of_processed_meats/",
     "category": "Science",
     "status": "pending",
-    "created_at": "2026-02-13 05:04:29"
+    "created_at": "2026-02-13 18:32:34"
   },
   {
-    "id": "ticket_1770977069_12",
-    "title": "Global warming is speeding breakdown of major greenhouse gas - University of California, Irvine",
-    "source_link": "https://www.reddit.com/r/science/comments/1r3dae4/global_warming_is_speeding_breakdown_of_major/",
+    "id": "ticket_1771025554_16",
+    "title": "Scientists Capture the Clearest View Yet of a Star Collapsing Into a Black Hole: an event astronomer",
+    "source_link": "https://www.reddit.com/r/science/comments/1r3pi2j/scientists_capture_the_clearest_view_yet_of_a/",
     "category": "Science",
     "status": "pending",
-    "created_at": "2026-02-13 05:04:29"
+    "created_at": "2026-02-13 18:32:34"
   },
   {
-    "id": "ticket_1770977069_13",
-    "title": "After 1,600 years underwater, remains of the Lighthouse of Alexandria emerge",
-    "source_link": "https://www.reddit.com/r/worldnews/comments/1r3ii30/after_1600_years_underwater_remains_of_the/",
-    "category": "World",
+    "id": "ticket_1771025554_17",
+    "title": "Patients with major depressive disorder shares immune abnormalities with inflammatory skin diseases,",
+    "source_link": "https://www.reddit.com/r/science/comments/1r429r0/patients_with_major_depressive_disorder_shares/",
+    "category": "Science",
     "status": "pending",
-    "created_at": "2026-02-13 05:04:29"
+    "created_at": "2026-02-13 18:32:34"
   },
   {
-    "id": "ticket_1770977069_14",
-    "title": "Ukraine will not accept a bad peace deal, Zelensky says",
-    "source_link": "https://www.reddit.com/r/worldnews/comments/1r3bkoz/ukraine_will_not_accept_a_bad_peace_deal_zelensky/",
+    "id": "ticket_1771025554_18",
+    "title": "US paid $32m to five countries to accept about 300 deportees, report shows",
+    "source_link": "https://www.reddit.com/r/news/comments/1r3xsos/us_paid_32m_to_five_countries_to_accept_about_300/",
     "category": "World",
     "status": "pending",
-    "created_at": "2026-02-13 05:04:29"
+    "created_at": "2026-02-13 18:32:34"
   },
   {
-    "id": "ticket_1770977069_15",
-    "title": "Justice Department's antitrust chief says she's leaving, effective immediately",
-    "source_link": "https://www.reddit.com/r/news/comments/1r3f90m/justice_departments_antitrust_chief_says_shes/",
+    "id": "ticket_1771025554_19",
+    "title": "Trump's CDC is canceling $600M in HIV and STD funds to four Democrat-led states",
+    "source_link": "https://www.reddit.com/r/news/comments/1r3qjln/trumps_cdc_is_canceling_600m_in_hiv_and_std_funds/",
     "category": "World",
     "status": "pending",
-    "created_at": "2026-02-13 05:04:29"
+    "created_at": "2026-02-13 18:32:34"
   },
   {
-    "id": "ticket_1770977069_16",
-    "title": "Amazon's Ring cancels Flock partnership amid Super Bowl ad backlash",
-    "source_link": "https://www.reddit.com/r/news/comments/1r3d0al/amazons_ring_cancels_flock_partnership_amid_super/",
+    "id": "ticket_1771025554_20",
+    "title": "Don Lemon pleads not guilty to federal civil rights charges after anti-ICE protest in Minnesota | Mi",
+    "source_link": "https://www.reddit.com/r/news/comments/1r405oj/don_lemon_pleads_not_guilty_to_federal_civil/",
     "category": "World",
     "status": "pending",
-    "created_at": "2026-02-13 05:04:29"
+    "created_at": "2026-02-13 18:32:34"
   },
   {
-    "id": "ticket_1770977069_17",
-    "title": "Pima County Sheriff's Department reportedly blocks FBI from accessing Nancy Guthrie evidence",
-    "source_link": "https://www.reddit.com/r/news/comments/1r3e6b1/pima_county_sheriffs_department_reportedly_blocks/",
+    "id": "ticket_1771025554_21",
+    "title": "German Chancellor Merz says US leadership \u2018lost,\u2019 calls for repair of relations",
+    "source_link": "https://www.reddit.com/r/worldnews/comments/1r3wgcu/german_chancellor_merz_says_us_leadership_lost/",
     "category": "World",
     "status": "pending",
-    "created_at": "2026-02-13 05:04:29"
+    "created_at": "2026-02-13 18:32:34"
+  },
+  {
+    "id": "ticket_1771025554_22",
+    "title": "Ukraine Says Russian Troops Paid for Fake Starlink, Doxxed Themselves - Business Insider",
+    "source_link": "https://www.reddit.com/r/worldnews/comments/1r3wo26/ukraine_says_russian_troops_paid_for_fake/",
+    "category": "World",
+    "status": "pending",
+    "created_at": "2026-02-13 18:32:34"
   }
 ]

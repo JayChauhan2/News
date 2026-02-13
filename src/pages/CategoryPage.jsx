@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { fetchArticles } from '../api/client';
+import { fetchArticles, deleteArticle } from '../api/client';
 import ArticleCard from '../components/ArticleCard';
 
 export default function CategoryPage() {
@@ -22,6 +22,13 @@ export default function CategoryPage() {
         load();
     }, [id]);
 
+    const handleDelete = async (articleId) => {
+        const success = await deleteArticle(articleId);
+        if (success) {
+            setArticles(articles.filter(a => a.id !== articleId));
+        }
+    };
+
     if (loading) return (
         <div className="flex justify-center items-center h-64">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600"></div>
@@ -37,7 +44,7 @@ export default function CategoryPage() {
             {articles.length > 0 ? (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                     {articles.map(article => (
-                        <ArticleCard key={article.id} article={article} />
+                        <ArticleCard key={article.id} article={article} onDelete={handleDelete} />
                     ))}
                 </div>
             ) : (
