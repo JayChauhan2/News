@@ -2,9 +2,9 @@
   {
     "name": "The Watchtower",
     "role": "Social Monitor",
-    "status": "Idle",
-    "current_assignment": "Scan complete. No new leads found.",
-    "last_updated": "2026-02-14T15:59:18.804556"
+    "status": "Active",
+    "current_assignment": "Discovered 1 new leads.",
+    "last_updated": "2026-02-15T09:21:17.701614"
   },
   {
     "name": "The Chief Editor",
@@ -18,13 +18,13 @@
     "role": "Journalist",
     "status": "Thinking",
     "current_assignment": "Formulating investigation strategy...",
-    "last_updated": "2026-02-15T08:22:16.169737"
+    "last_updated": "2026-02-15T09:31:29.555897"
   },
   {
     "name": "The Senior Reporter",
     "role": "Journalist",
     "status": "Idle",
     "current_assignment": "Waiting for new assignments...",
-    "last_updated": "2026-02-15T08:35:09.515521"
+    "last_updated": "2026-02-15T09:37:09.926165"
   }
 ]

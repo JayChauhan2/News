@@ -4,7 +4,7 @@ import Footer from './Footer';
 
 export default function Layout({ children }) {
     return (
-        <div className="min-h-screen flex flex-col bg-white text-slate-900 font-sans">
+        <div className="min-h-screen flex flex-col bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 font-serif transition-colors duration-300">
             <Header />
             <main className="flex-grow container mx-auto px-4 max-w-7xl">
                 {children}

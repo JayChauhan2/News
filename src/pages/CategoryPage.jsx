@@ -10,14 +10,41 @@ export default function CategoryPage() {
 
     useEffect(() => {
         async function load() {
-            setLoading(true);
-            const data = await fetchArticles();
-            // Filter articles by category (case-insensitive)
-            const filtered = data.filter(article =>
-                article.category && article.category.toLowerCase() === id.toLowerCase()
-            );
-            setArticles(filtered);
-            setLoading(false);
+            try {
+                setLoading(true);
+                console.log("Loading category:", id);
+                const data = await fetchArticles();
+                console.log("Fetched articles:", data ? data.length : "null");
+
+                if (!id) {
+                    console.error("Category ID is missing");
+                    setArticles([]);
+                    return;
+                }
+
+                if (!Array.isArray(data)) {
+                    console.error("Data is not an array:", data);
+                    setArticles([]);
+                    return;
+                }
+
+                // Filter articles by category (case-insensitive)
+                const filtered = data.filter(article => {
+                    try {
+                        return article.category && article.category.toLowerCase() === id.toLowerCase();
+                    } catch (err) {
+                        console.warn("Error filtering article:", article, err);
+                        return false;
+                    }
+                });
+
+                console.log("Filtered articles:", filtered.length);
+                setArticles(filtered);
+            } catch (error) {
+                console.error("Error loading category page:", error);
+            } finally {
+                setLoading(false);
+            }
         }
         load();
     }, [id]);

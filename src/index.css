@@ -1,9 +1,11 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 @theme {
   --font-sans: 'Inter', system-ui, sans-serif;
-  --font-serif: 'Inter', system-ui, sans-serif;
-  /* Override any lingering serif usage */
+  --font-serif: 'Playfair Display', 'Merriweather', serif;
+  --font-body: 'Merriweather', serif;
 }
 
 /* Custom Utilities via @layer is not needed for simple things, just use classes */
