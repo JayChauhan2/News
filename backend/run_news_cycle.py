@@ -64,7 +64,7 @@ def run_cycle():
     
     # 1. Watchtower (Trend Spotting)
     # We scan for multiple categories
-    categories = ["Tech", "Business", "Science", "World"]
+    categories = ["Tech", "Business", "Science", "World", "Politics"]
     all_leads = []
     
     for cat in categories:

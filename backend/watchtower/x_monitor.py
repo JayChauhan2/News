@@ -25,7 +25,8 @@ SUBREDDIT_MAP = {
     "Business": ["investing", "StockMarket", "economics", "finance"],
     "Science": ["space", "science", "EverythingScience"],
     "Finance": ["investing", "StockMarket", "economics", "finance"], # Alias for Business
-    "Markets": ["StockMarket", "investing", "wallstreetbets"]       # Alias
+    "Markets": ["StockMarket", "investing", "wallstreetbets"],       # Alias
+    "Politics": ["politics", "politicaldiscussion"]
 }
 
 # Flatten for default "all" scan
